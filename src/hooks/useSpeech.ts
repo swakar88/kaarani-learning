@@ -4,65 +4,141 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface UseSpeechReturn {
   speak: (text: string) => void;
+  speakScript: (segments: string[], onSegmentStart?: (index: number) => void) => void;
   stop: () => void;
   isSpeaking: boolean;
   isSupported: boolean;
 }
 
+// Module-level voice cache — shared across hook instances, survives re-renders
+let _voicesCache: SpeechSynthesisVoice[] = [];
+let _voicesLoaded = false;
+
+function loadVoices(): Promise<SpeechSynthesisVoice[]> {
+  if (_voicesLoaded && _voicesCache.length > 0) return Promise.resolve(_voicesCache);
+  return new Promise(resolve => {
+    const immediate = window.speechSynthesis.getVoices();
+    if (immediate.length > 0) {
+      _voicesCache = immediate;
+      _voicesLoaded = true;
+      resolve(immediate);
+      return;
+    }
+    const handler = () => {
+      _voicesCache = window.speechSynthesis.getVoices();
+      _voicesLoaded = true;
+      window.speechSynthesis.removeEventListener("voiceschanged", handler);
+      resolve(_voicesCache);
+    };
+    window.speechSynthesis.addEventListener("voiceschanged", handler);
+    // Fallback — some browsers never fire voiceschanged
+    setTimeout(() => {
+      if (!_voicesLoaded) {
+        _voicesCache = window.speechSynthesis.getVoices();
+        _voicesLoaded = true;
+        resolve(_voicesCache);
+      }
+    }, 2500);
+  });
+}
+
+function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
+  return (
+    voices.find(
+      v =>
+        v.lang.startsWith("en") &&
+        (v.name.includes("Female") ||
+          v.name.includes("Samantha") ||
+          v.name.includes("Karen") ||
+          v.name.includes("Moira") ||
+          v.name.includes("Zira") ||
+          v.name.includes("Google UK English Female"))
+    ) ?? null
+  );
+}
+
 export function useSpeech(): UseSpeechReturn {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const cancelledRef = useRef(false);
 
   useEffect(() => {
-    setIsSupported(
-      typeof window !== "undefined" && "speechSynthesis" in window
-    );
+    const supported = typeof window !== "undefined" && "speechSynthesis" in window;
+    setIsSupported(supported);
+    if (supported) loadVoices(); // warm up while user reads
   }, []);
 
   const stop = useCallback(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
+    cancelledRef.current = true;
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
   }, []);
 
-  const speak = useCallback(
-    (text: string) => {
-      if (typeof window === "undefined" || !window.speechSynthesis) return;
-
-      // Cancel any ongoing speech
-      window.speechSynthesis.cancel();
+  // Speaks one string, returns Promise that resolves when utterance ends
+  const speakOne = useCallback((text: string): Promise<void> => {
+    return new Promise(async resolve => {
+      if (
+        typeof window === "undefined" ||
+        !window.speechSynthesis ||
+        cancelledRef.current
+      ) {
+        resolve();
+        return;
+      }
+      const voices = await loadVoices();
+      if (cancelledRef.current) { resolve(); return; }
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 0.92;
       utterance.pitch = 1.05;
       utterance.volume = 1.0;
-
-      // Prefer a warm, clear English voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const preferred = voices.find(
-        (v) =>
-          v.lang.startsWith("en") &&
-          (v.name.includes("Female") ||
-            v.name.includes("Samantha") ||
-            v.name.includes("Karen") ||
-            v.name.includes("Moira") ||
-            v.name.includes("Zira") ||
-            v.name.includes("Google UK English Female"))
-      );
+      const preferred = pickVoice(voices);
       if (preferred) utterance.voice = preferred;
 
       utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
+      utterance.onend = () => { setIsSpeaking(false); resolve(); };
+      utterance.onerror = () => { setIsSpeaking(false); resolve(); };
 
-      utteranceRef.current = utterance;
       window.speechSynthesis.speak(utterance);
+    });
+  }, []);
+
+  const speak = useCallback(
+    (text: string) => {
+      if (typeof window === "undefined" || !window.speechSynthesis) return;
+      cancelledRef.current = false;
+      window.speechSynthesis.cancel();
+      // 50ms delay after cancel — Chrome bug: speak() immediately after cancel() silently fails
+      setTimeout(() => {
+        if (!cancelledRef.current) speakOne(text);
+      }, 50);
     },
-    []
+    [speakOne]
   );
 
-  // Clean up on unmount
+  const speakScript = useCallback(
+    (segments: string[], onSegmentStart?: (index: number) => void) => {
+      if (typeof window === "undefined" || !window.speechSynthesis) return;
+      cancelledRef.current = false;
+      window.speechSynthesis.cancel();
+
+      const run = async () => {
+        await new Promise(r => setTimeout(r, 50)); // Chrome cancel bug workaround
+        for (let i = 0; i < segments.length; i++) {
+          if (cancelledRef.current) break;
+          onSegmentStart?.(i);
+          await speakOne(segments[i]);
+          if (i < segments.length - 1 && !cancelledRef.current) {
+            await new Promise(r => setTimeout(r, 320)); // natural pause between segments
+          }
+        }
+      };
+      run();
+    },
+    [speakOne]
+  );
+
   useEffect(() => {
     return () => {
       if (typeof window !== "undefined" && window.speechSynthesis) {
@@ -71,5 +147,5 @@ export function useSpeech(): UseSpeechReturn {
     };
   }, []);
 
-  return { speak, stop, isSpeaking, isSupported };
+  return { speak, speakScript, stop, isSpeaking, isSupported };
 }

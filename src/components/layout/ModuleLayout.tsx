@@ -19,6 +19,10 @@ interface ModuleLayoutProps {
   primaryAction: PrimaryAction;
   onPrev?: () => void;
   children: React.ReactNode;
+  /** Optional narration script — each string is one spoken segment */
+  narrationScript?: string[];
+  /** Fires with segment index (0-based) as each segment starts playing */
+  onCueChange?: (cue: number) => void;
 }
 
 export function ModuleLayout({
@@ -30,6 +34,8 @@ export function ModuleLayout({
   primaryAction,
   onPrev,
   children,
+  narrationScript,
+  onCueChange,
 }: ModuleLayoutProps) {
   const module = MODULES[moduleId] ?? MODULES[0];
 
@@ -60,7 +66,13 @@ export function ModuleLayout({
           {children}
         </section>
         <aside className="w-72 xl:w-80 flex-shrink-0 overflow-y-auto p-6 border-l" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB" }}>
-          <KaaraniSidebar text={kaaraniText} hint={kaaraniHint} screenKey={`${moduleId}-${screenIndex}`} />
+          <KaaraniSidebar
+            text={kaaraniText}
+            hint={kaaraniHint}
+            screenKey={`${moduleId}-${screenIndex}`}
+            script={narrationScript}
+            onCueChange={onCueChange}
+          />
         </aside>
       </main>
 
