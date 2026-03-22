@@ -32,7 +32,7 @@ const PRINCIPLES = [
   {
     category: "Storytelling",
     icon: "",
-    color: "#EF4444",
+    color: "#2563EB",
     dos: ["Answer ONE question per page", "Put the most important insight at top-left (reading order)", "Add subtitles to every visual explaining what to look for"],
     donts: ["Put 15 charts on one page", "Leave chart titles as 'Sum of Value1'", "Build a report only you can interpret"],
   },
@@ -64,9 +64,9 @@ export default function Screen13DesignPrinciples({ onNext, onPrev, screenIndex, 
                   ))}
                 </div>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: "#EF4444" }}> Don't</p>
+                  <p className="text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: "#6B7280" }}>Don't</p>
                   {p.donts.map(d => (
-                    <p key={d} className="text-xs mb-1 flex gap-1" style={{ color: "#111827" }}><span style={{ color: "#EF4444", flexShrink: 0 }}>•</span> {d}</p>
+                    <p key={d} className="text-xs mb-1 flex gap-1" style={{ color: "#111827" }}><span style={{ color: "#9CA3AF", flexShrink: 0 }}>•</span> {d}</p>
                   ))}
                 </div>
               </div>

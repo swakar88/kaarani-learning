@@ -13,7 +13,7 @@ const M_COLOR = "#2563EB";
 const REL_TYPES = [
   { type: "One-to-Many (1:*)", icon: "1⃣→", color: "#2563EB", desc: "One row in the dimension matches many rows in the fact. E.g. one Player → many deliveries.", best: "The standard. Always aim for this.", example: "dim_Player → fact_Deliveries via player_id" },
   { type: "Many-to-One (*:1)", icon: "→1⃣", color: "#2563EB", desc: "Same as 1:* but described from the fact side. Power BI treats them the same.", best: "Same as 1:* — just the direction described differently.", example: "fact_Deliveries → dim_Player via player_id" },
-  { type: "Many-to-Many (*:*)", icon: "→", color: "#EF4444", desc: "Both tables have duplicate values in the key. Requires a bridge table or can cause issues.", best: "Avoid if possible. Use a bridge table instead.", example: "Students ↔ Courses (a student takes many courses; a course has many students)" },
+  { type: "Many-to-Many (*:*)", icon: "→", color: "#2563EB", desc: "Both tables have duplicate values in the key. Requires a bridge table or can cause issues.", best: "Avoid if possible. Use a bridge table instead.", example: "Students ↔ Courses (a student takes many courses; a course has many students)" },
 ];
 
 export default function Screen3Relationships({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
@@ -64,8 +64,8 @@ export default function Screen3Relationships({ onNext, onPrev, screenIndex, tota
           <p className="font-black mb-2" style={{ color: current.color }}>{current.type}</p>
           <p className="text-sm mb-2" style={{ color: "#111827" }}>{current.desc}</p>
           <p className="text-xs font-mono mb-2" style={{ color: "#6B7280" }}>e.g. {current.example}</p>
-          <div className="rounded-lg px-3 py-2" style={{ backgroundColor: current.color === "#EF4444" ? "#FEF2F2" : "#F9FAFB", border: `1px solid ${current.color}30` }}>
-            <p className="text-xs font-semibold" style={{ color: current.color }}>{current.color === "#EF4444" ? "" : ""} {current.best}</p>
+          <div className="rounded-lg px-3 py-2" style={{ backgroundColor: "#F9FAFB", border: `1px solid ${current.color}30` }}>
+            <p className="text-xs font-semibold" style={{ color: current.color }}>{current.best}</p>
           </div>
         </div>
 

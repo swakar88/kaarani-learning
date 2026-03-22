@@ -19,7 +19,7 @@ const ANALYTICS_LADDER = [
     question: "What should we do?",
     powerBI: "Limited — via Azure ML + Power Automate",
     difficulty: "Hardest",
-    diffColor: "#EF4444",
+    diffColor: "#9CA3AF",
     color: "#2563EB",
     bg: "#F9FAFB",
     border: "#E8E8E8",

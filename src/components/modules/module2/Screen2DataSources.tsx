@@ -15,7 +15,7 @@ const SOURCES = [
   { id: "database", icon: "", label: "Databases", desc: "SQL Server, MySQL, PostgreSQL, Azure SQL", note: "Production standard", color: "#2563EB" },
   { id: "web", icon: "", label: "Web & Online", desc: "Web scraping, SharePoint, OData APIs", note: "Powerful but fragile", color: "#2563EB" },
   { id: "cloud", icon: "", label: "Cloud Services", desc: "Azure, Dataverse, Fabric Lakehouse, Snowflake", note: "Enterprise standard", color: "#2563EB" },
-  { id: "other", icon: "", label: "Other Apps", desc: "Salesforce, SAP, Google Analytics, and 100+ more", note: "Via certified connectors", color: "#EF4444" },
+  { id: "other", icon: "", label: "Other Apps", desc: "Salesforce, SAP, Google Analytics, and 100+ more", note: "Via certified connectors", color: "#2563EB" },
 ];
 
 export default function Screen2DataSources({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {

@@ -28,13 +28,13 @@ export default function Screen1WhatIsModel({ onNext, onPrev, screenIndex, totalS
 
         {/* Before / After */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="rounded-2xl p-5" style={{ backgroundColor: "#FEF2F2", border: "2px dashed #FECACA" }}>
-            <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: "#EF4444" }}>Without a model</p>
+          <div className="rounded-2xl p-5" style={{ backgroundColor: "#F9FAFB", border: "2px dashed #D1D5DB" }}>
+            <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: "#6B7280" }}>Without a model</p>
             <div className="flex flex-col gap-2">
-              {[" Table A — isolated", " Table B — isolated", " Table C — isolated"].map(t => (
-                <div key={t} className="rounded-lg px-3 py-2 text-xs" style={{ backgroundColor: "#FFFFFF", border: "1px solid #FECACA", color: "#111827" }}>{t}</div>
+              {["Table A — isolated", "Table B — isolated", "Table C — isolated"].map(t => (
+                <div key={t} className="rounded-lg px-3 py-2 text-xs" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB", color: "#9CA3AF" }}>{t}</div>
               ))}
-              <p className="text-xs mt-1" style={{ color: "#EF4444" }}>Filters don't cross tables</p>
+              <p className="text-xs mt-1" style={{ color: "#6B7280" }}>Filters don't cross tables</p>
             </div>
           </div>
           <div className="rounded-2xl p-5" style={{ backgroundColor: "#F9FAFB", border: "2px solid #E5E7EB" }}>

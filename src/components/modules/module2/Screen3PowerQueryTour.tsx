@@ -18,7 +18,7 @@ const PQ_ZONES = [
   { id: "steps", label: "Applied Steps", icon: "", x: "79%", y: "16%", w: "21%", h: "72%",
     desc: "Your recipe! Every click adds a step here. You can delete, reorder, or rename steps. Power BI replays them every time data refreshes.", color: "#2563EB" },
   { id: "formula", label: "Formula Bar", icon: "", x: "5%", y: "89%", w: "90%", h: "8%",
-    desc: "Shows the M code behind each step. You don't need to write M — but you can edit it here if you want advanced transformations.", color: "#EF4444" },
+    desc: "Shows the M code behind each step. You don't need to write M — but you can edit it here if you want advanced transformations.", color: "#2563EB" },
 ];
 
 export default function Screen3PowerQueryTour({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {

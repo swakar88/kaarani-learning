@@ -59,8 +59,8 @@ export default function Screen9ConditionalFormatting({ onNext, onPrev, screenInd
             </thead>
             <tbody>
               {DEMO_DATA.map(r => {
-                const bgColor = r.status === "high" ? "#F9FAFB" : r.status === "mid" ? "#F9FAFB" : "#FEF2F2";
-                const textColor = r.status === "high" ? "#111827" : r.status === "mid" ? "#1E3A8A" : "#B91C1C";
+                const bgColor = "#F9FAFB";
+                const textColor = r.status === "high" ? "#111827" : r.status === "mid" ? "#2563EB" : "#6B7280";
                 const icon = r.status === "high" ? "⬆" : r.status === "mid" ? "" : "⬇";
                 const scale = `hsl(${r.value * 0.8}, 70%, ${95 - r.value * 0.3}%)`;
                 return (

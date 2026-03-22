@@ -33,9 +33,9 @@ export default function Screen11BestPractices({ onNext, onPrev, screenIndex, tot
         <div className="flex flex-col gap-2">
           {PRACTICES.map(p => (
             <div key={p.label} className="flex items-start gap-3 p-4 rounded-2xl"
-              style={{ backgroundColor: p.do ? "#F9FAFB" : "#FEF2F2", border: `1.5px solid ${p.do ? "#E5E7EB" : "#FECACA"}` }}>
+              style={{ backgroundColor: "#F9FAFB", border: `1.5px solid #E5E7EB` }}>
                             <div>
-                <p className="font-bold text-sm mb-0.5" style={{ color: p.do ? "#111827" : "#991B1B" }}>{p.label}</p>
+                <p className="font-bold text-sm mb-0.5" style={{ color: "#111827" }}>{p.label}</p>
                 <p className="text-xs leading-snug" style={{ color: "#6B7280" }}>{p.desc}</p>
               </div>
             </div>

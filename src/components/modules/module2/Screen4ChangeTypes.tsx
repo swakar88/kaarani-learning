@@ -15,7 +15,7 @@ const DATA_TYPES = [
   { type: "Whole Number", icon: "", color: "#2563EB", examples: ["42", "1,299", "\"100\""], fix: "Change Type → Whole Number" },
   { type: "Decimal Number", icon: "", color: "#2563EB", examples: ["3.14", "1,299.50", "\"42.5\""], fix: "Change Type → Decimal" },
   { type: "Text", icon: "", color: "#2563EB", examples: ["Player name", "City", "Category"], fix: "Change Type → Text" },
-  { type: "True/False", icon: "", color: "#EF4444", examples: ["1/0", "Yes/No", "TRUE/FALSE"], fix: "Change Type → True/False" },
+  { type: "True/False", icon: "", color: "#2563EB", examples: ["1/0", "Yes/No", "TRUE/FALSE"], fix: "Change Type → True/False" },
 ];
 
 export default function Screen4ChangeTypes({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
@@ -38,8 +38,8 @@ export default function Screen4ChangeTypes({ onNext, onPrev, screenIndex, totalS
           subtitle="Power Query imports everything as text by default. You must set the correct types." moduleColor={M_COLOR} />
 
         {/* Flavor issue spotlight */}
-        <div className="rounded-2xl p-4 mb-5" style={{ backgroundColor: "#FEF2F2", border: "2px solid #FECACA" }}>
-          <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#EF4444" }}>Issue in our {flavor.label} dataset</p>
+        <div className="rounded-2xl p-4 mb-5" style={{ backgroundColor: "#EFF6FF", border: "2px solid #BFDBFE" }}>
+          <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#2563EB" }}>Issue in our {flavor.label} dataset</p>
           <p className="text-sm font-semibold" style={{ color: "#111827" }}>{dateIssue.issue}</p>
           <p className="text-xs mt-1 font-bold" style={{ color: "#2563EB" }}>Fix: {dateIssue.fix}</p>
         </div>

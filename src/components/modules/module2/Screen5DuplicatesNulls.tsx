@@ -41,8 +41,8 @@ export default function Screen5DuplicatesNulls({ onNext, onPrev, screenIndex, to
 
         {tab === "dupes" && (
           <div className="animate-fade-in-up flex flex-col gap-4">
-            <div className="rounded-2xl p-4" style={{ backgroundColor: "#FEF2F2", border: "2px solid #FECACA" }}>
-              <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#EF4444" }}>Issue in our dataset</p>
+            <div className="rounded-2xl p-4" style={{ backgroundColor: "#EFF6FF", border: "2px solid #BFDBFE" }}>
+              <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#2563EB" }}>Issue in our dataset</p>
               <p className="text-sm font-semibold" style={{ color: "#111827" }}>{dupeIssue.issue}</p>
               <p className="text-xs mt-1.5" style={{ color: "#2563EB" }}> Fix: {dupeIssue.fix}</p>
             </div>
@@ -51,7 +51,7 @@ export default function Screen5DuplicatesNulls({ onNext, onPrev, screenIndex, to
               <ol className="flex flex-col gap-1.5">
                 {["Select the column(s) that define uniqueness (e.g. match_id)", "Home ribbon → Remove Rows → Remove Duplicates", "Or: right-click column header → Remove Duplicates"].map((step, i) => (
                   <li key={i} className="flex gap-2 text-sm" style={{ color: "#6B7280" }}>
-                    <span className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-black text-white" style={{ backgroundColor: "#EF4444" }}>{i + 1}</span>
+                    <span className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-black text-white" style={{ backgroundColor: "#2563EB" }}>{i + 1}</span>
                     {step}
                   </li>
                 ))}
@@ -74,7 +74,7 @@ export default function Screen5DuplicatesNulls({ onNext, onPrev, screenIndex, to
                   { action: "Replace null → 0", when: "Numeric field where null = 0 (e.g. no goals scored)", color: "#2563EB" },
                   { action: "Replace null → 'Unknown'", when: "Text field where null means missing info", color: "#2563EB" },
                   { action: "Keep as null", when: "Rating not given — don't assume 0", color: "#2563EB" },
-                  { action: "Remove rows with null", when: "Key identifier column is null — row is useless", color: "#EF4444" },
+                  { action: "Remove rows with null", when: "Key identifier column is null — row is useless", color: "#2563EB" },
                 ].map(opt => (
                   <div key={opt.action} className="rounded-xl p-3" style={{ backgroundColor: opt.color + "0C", border: `1px solid ${opt.color}30` }}>
                     <p className="text-xs font-bold mb-1" style={{ color: opt.color }}>{opt.action}</p>

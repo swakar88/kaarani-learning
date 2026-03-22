@@ -64,7 +64,7 @@ export default function Screen3Publish({ onNext, onPrev, screenIndex, totalScree
           </div>
         )}
 
-        <div className="mt-4 rounded-xl p-3" style={{ backgroundColor: "#FEF2F2", border: "1px solid #FECACA" }}>
+        <div className="mt-4 rounded-xl p-3" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
           <p className="text-xs font-bold mb-1" style={{ color: M_COLOR }}> What publishing does NOT do</p>
           <p className="text-xs" style={{ color: "#111827" }}>It does not share with others automatically. Publishing puts it in your workspace. You still need to configure sharing, permissions, and a refresh schedule.</p>
         </div>

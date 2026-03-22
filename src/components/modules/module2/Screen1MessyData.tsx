@@ -66,7 +66,7 @@ export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScr
               <div className="flex-1">
                 <p className="text-xs font-bold" style={{ color: "#111827" }}>{ex.label}</p>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-xs px-2 py-0.5 rounded font-mono" style={{ backgroundColor: "#FEF2F2", color: "#B91C1C" }}>{ex.bad}</span>
+                  <span className="text-xs px-2 py-0.5 rounded font-mono" style={{ backgroundColor: "#F3F4F6", color: "#6B7280" }}>{ex.bad}</span>
                   <span style={{ color: "#6B7280" }}>→</span>
                   <span className="text-xs px-2 py-0.5 rounded font-mono" style={{ backgroundColor: "#F9FAFB", color: "#111827" }}>{ex.good}</span>
                 </div>

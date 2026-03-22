@@ -50,10 +50,10 @@ export default function Screen7FilterRows({ onNext, onPrev, screenIndex, totalSc
           {rows.map(row => (
             <div key={row.id} onClick={() => setRows(prev => prev.map(r => r.id === row.id ? { ...r, keep: !r.keep } : r))}
               className="flex items-center gap-4 px-4 py-3 border-b cursor-pointer transition-all"
-              style={{ backgroundColor: row.keep ? "#FFFFFF" : "#FEF2F2", borderColor: "#E5E7EB", opacity: row.keep ? 1 : 0.6 }}>
+              style={{ backgroundColor: row.keep ? "#FFFFFF" : "#F9FAFB", borderColor: "#E5E7EB", opacity: row.keep ? 1 : 0.5 }}>
               <span className="text-lg w-6 text-center">{row.keep ? "" : ""}</span>
               <span className="text-xs font-mono flex-1" style={{ color: "#111827" }}>Row {row.id}: {dataset.columns.slice(0, 3).join(", ")}…</span>
-              <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: row.keep ? "#F9FAFB" : "#FEF2F2", color: row.keep ? "#111827" : "#B91C1C" }}>{row.reason}</span>
+              <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: row.keep ? "#F9FAFB" : "#E5E7EB", color: row.keep ? "#111827" : "#6B7280" }}>{row.reason}</span>
             </div>
           ))}
         </div>

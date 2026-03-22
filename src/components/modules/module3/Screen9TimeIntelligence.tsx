@@ -15,7 +15,7 @@ const TIME_FUNCTIONS = [
   { fn: "TOTALQTD()", plain: "Total quarter-to-date", desc: "Running total from the start of the current quarter", color: "#2563EB" },
   { fn: "TOTALMTD()", plain: "Total month-to-date", desc: "Running total from the start of the current month", color: "#2563EB" },
   { fn: "SAMEPERIODLASTYEAR()", plain: "Same period last year", desc: "Returns the equivalent period from 12 months ago — for YoY comparison", color: "#2563EB" },
-  { fn: "DATEADD()", plain: "Shift dates by N periods", desc: "Compare vs N days/months/quarters/years ago", color: "#EF4444" },
+  { fn: "DATEADD()", plain: "Shift dates by N periods", desc: "Compare vs N days/months/quarters/years ago", color: "#2563EB" },
   { fn: "DATESINPERIOD()", plain: "Last N days/weeks", desc: "Rolling window — e.g. last 30 days, last 12 weeks", color: "#2563EB" },
 ];
 

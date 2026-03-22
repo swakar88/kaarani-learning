@@ -30,9 +30,9 @@ export default function Screen4Diagnostic({
       label: "Notice the anomaly",
       icon: "",
       content: example.problem,
-      color: "#EF4444",
-      bg: "#FEF2F2",
-      border: "#FECACA",
+      color: "#2563EB",
+      bg: "#EFF6FF",
+      border: "#BFDBFE",
     },
     {
       label: "Ask 'why?'",

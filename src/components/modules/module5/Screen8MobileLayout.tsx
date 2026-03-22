@@ -90,7 +90,7 @@ export default function Screen8MobileLayout({ onNext, onPrev, screenIndex, total
               <li>• Large tap targets</li>
             </ul>
           </div>
-          <div className="rounded-xl p-3" style={{ backgroundColor: "#FEF2F2", border: "1px solid #FECACA" }}>
+          <div className="rounded-xl p-3" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
             <p className="text-xs font-bold mb-1" style={{ color: M_COLOR }}> Avoid</p>
             <ul className="text-xs space-y-1" style={{ color: "#111827" }}>
               <li>• Complex matrices</li>

@@ -65,7 +65,7 @@ export default function Screen5RLS({ onNext, onPrev, screenIndex, totalScreens }
           </button>
         </div>
 
-        <div className="rounded-xl p-3" style={{ backgroundColor: "#FEF2F2", border: "1px solid #FECACA" }}>
+        <div className="rounded-xl p-3" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
           <p className="text-xs font-bold mb-1" style={{ color: M_COLOR }}> Common RLS mistakes</p>
           <ul className="text-xs space-y-1" style={{ color: "#111827" }}>
             <li>• Forgetting to assign users to roles in the Service — role exists but nobody is in it</li>

@@ -29,8 +29,8 @@ export default function Screen10Variables({ onNext, onPrev, screenIndex, totalSc
         {/* Before / After */}
         <div className="grid grid-cols-1 gap-4 mb-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "#EF4444" }}> Without VAR — repeated calculations</p>
-            <CodeBlock code={`// This calls SUM() twice — inefficient\nChange vs LY = \nDIVIDE(\n    [Total ${flavor.metric1Label}] - CALCULATE([Total ${flavor.metric1Label}], SAMEPERIODLASTYEAR(dim_Date[date])),\n    CALCULATE([Total ${flavor.metric1Label}], SAMEPERIODLASTYEAR(dim_Date[date]))\n)`} color="#EF4444" />
+            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "#6B7280" }}>Without VAR — repeated calculations</p>
+            <CodeBlock code={`// This calls SUM() twice — inefficient\nChange vs LY = \nDIVIDE(\n    [Total ${flavor.metric1Label}] - CALCULATE([Total ${flavor.metric1Label}], SAMEPERIODLASTYEAR(dim_Date[date])),\n    CALCULATE([Total ${flavor.metric1Label}], SAMEPERIODLASTYEAR(dim_Date[date]))\n)`} color={M_COLOR} />
           </div>
           <div>
             <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: M_COLOR }}> With VAR — readable and fast</p>
