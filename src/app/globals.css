@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --color-k-primary: #2563EB;
+  --color-k-primary-dark: #1D4ED8;
+  --color-k-primary-light: #60A5FA;
+  --color-k-bg: #F8FAFC;
+  --color-k-accent: #DBEAFE;
+  --color-k-border: #E8C5A0;
+  --color-k-text: #3D2B1F;
+  --color-k-text-muted: #8B6650;
+  --color-k-sidebar: #FEF3E2;
+  --color-k-success: #2D7D46;
+  --color-k-module-0: #2563EB;
+  --color-k-module-1: #3B82F6;
+  --color-k-module-2: #8B5CF6;
+  --color-k-module-3: #10B981;
+  --color-k-module-4: #F59E0B;
+  --color-k-module-5: #EF4444;
+}
+
+:root {
+  --background: #F8FAFC;
+  --foreground: #3D2B1F;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #F8FAFC;
+  color: #3D2B1F;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar for warm theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #DBEAFE;
+}
+::-webkit-scrollbar-thumb {
+  background: #2563EB;
+  border-radius: 3px;
+}
+
+/* Kaarani pulse animation for voice indicator */
+@keyframes kaarani-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.85; }
+}
+
+@keyframes kaarani-wave {
+  0% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+  100% { transform: scaleY(0.4); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-kaarani-pulse {
+  animation: kaarani-pulse 2s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.35s ease-out both;
+}
+
+.wave-bar {
+  animation: kaarani-wave 0.6s ease-in-out infinite;
+}
+.wave-bar:nth-child(2) { animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { animation-delay: 0.3s; }
+.wave-bar:nth-child(5) { animation-delay: 0.4s; }
