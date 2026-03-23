@@ -25,6 +25,7 @@ export function KaaraniProvider({ children }: { children: React.ReactNode }) {
   const [selectedFlavor, setSelectedFlavorState] =
     useState<string>(DEFAULT_FLAVOR_ID);
   const [voiceEnabled, setVoiceEnabledState] = useState<boolean>(true);
+  const [voiceUnlocked, setVoiceUnlocked] = useState<boolean>(false);
   const [completedModules, setCompletedModules] = useState<number[]>([]);
   const [currentModule, setCurrentModuleState] = useState<number>(0);
   const [hydrated, setHydrated] = useState(false);
@@ -73,6 +74,10 @@ export function KaaraniProvider({ children }: { children: React.ReactNode }) {
     setVoiceEnabledState(v);
   }, []);
 
+  const unlockVoice = useCallback(() => {
+    setVoiceUnlocked(true);
+  }, []);
+
   const markModuleComplete = useCallback((id: number) => {
     setCompletedModules((prev) =>
       prev.includes(id) ? prev : [...prev, id]
@@ -88,6 +93,8 @@ export function KaaraniProvider({ children }: { children: React.ReactNode }) {
     setSelectedFlavor,
     voiceEnabled,
     setVoiceEnabled,
+    voiceUnlocked,
+    unlockVoice,
     completedModules,
     markModuleComplete,
     currentModule,

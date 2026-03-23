@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { ProgressDots } from "./ProgressDots";
 import { KaaraniSidebar } from "@/components/kaarani/KaaraniSidebar";
 import { MODULES } from "@/data/modules";
+import { useKaarani } from "@/context/KaaraniContext";
 
 interface PrimaryAction {
   label: string;
@@ -19,10 +22,6 @@ interface ModuleLayoutProps {
   primaryAction: PrimaryAction;
   onPrev?: () => void;
   children: React.ReactNode;
-  /** Optional narration script — each string is one spoken segment */
-  narrationScript?: string[];
-  /** Fires with segment index (0-based) as each segment starts playing */
-  onCueChange?: (cue: number) => void;
 }
 
 export function ModuleLayout({
@@ -34,10 +33,9 @@ export function ModuleLayout({
   primaryAction,
   onPrev,
   children,
-  narrationScript,
-  onCueChange,
 }: ModuleLayoutProps) {
   const module = MODULES[moduleId] ?? MODULES[0];
+  const { unlockVoice } = useKaarani();
 
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: "#F8FAFC" }}>
@@ -69,9 +67,6 @@ export function ModuleLayout({
           <KaaraniSidebar
             text={kaaraniText}
             hint={kaaraniHint}
-            screenKey={`${moduleId}-${screenIndex}`}
-            script={narrationScript}
-            onCueChange={onCueChange}
           />
         </aside>
       </main>
@@ -91,7 +86,7 @@ export function ModuleLayout({
         </div>
         <button
           type="button"
-          onClick={primaryAction.onClick}
+          onClick={() => { unlockVoice(); primaryAction.onClick(); }}
           disabled={primaryAction.disabled || primaryAction.loading}
           className="px-6 py-2.5 text-sm font-semibold rounded-lg text-white transition-all disabled:opacity-50"
           style={{ backgroundColor: "#2563EB" }}

@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
+import { useKaarani } from "@/context/KaaraniContext";
 import { ScreenHeader } from "@/components/ui/ScreenSection";
+import { useBlockReveal } from "@/hooks/useBlockReveal";
+import { useSpeechContext } from "@/context/SpeechContext";
 
 const M_COLOR = "#2563EB";
 
@@ -39,40 +41,65 @@ const PRINCIPLES = [
 ];
 
 export default function Screen13DesignPrinciples({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
+  const { unlockVoice } = useKaarani();
+  const { speak } = useSpeechContext();
+
+  const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(5);
+
+  const narrationScript = [
+    "Data without clarity is just noise. The best Power BI reports answer one question per page, use colour intentionally, and put the most important insight where the eye lands first — top left.",
+    "Layout matters most: KPI cards at the top, slicers on the left, related visuals grouped together with whitespace. Think of a 12-column grid like newspaper layout.",
+    "Colour discipline: one primary colour plus greys. Red means bad, green means good — universally understood. Never use more than four or five colours in one report.",
+    "Typography rules: KPI numbers at 24pt or larger, body text minimum 10 to 12pt, and always use bold headers. Never use more than two font families in a report.",
+    "Storytelling is the most important principle: one question per page, most important insight at top-left, subtitles on every visual explaining what to look for. Before publishing, ask: can a busy person understand this in five seconds?",
+  ];
+
   return (
     <ModuleLayout moduleId={4} screenIndex={screenIndex} totalScreens={totalScreens}
       kaaraniText="Data without clarity is just noise. The best Power BI reports answer one question per page, use colour intentionally, and put the most important insight where the eye lands first — top left. Design is not decoration. It's communication."
       kaaraniHint="Before publishing, ask: 'Can a busy person understand this in 5 seconds?' If not, simplify. Less is almost always more in dashboards."
       onPrev={onPrev}
-      primaryAction={{ label: "Module 4 complete →", onClick: onNext }}
+      primaryAction={isComplete
+        ? { label: "Module 4 complete →", onClick: onNext }
+        : { label: "Module 4 complete →", onClick: onNext, disabled: true }}
     >
       <div className="max-w-2xl mx-auto">
-        <ScreenHeader moduleId={4} label="Module 4 · Screen 13" title="Report design best practices "
-          subtitle="Beautiful reports communicate faster. Good design is good data analysis." moduleColor={M_COLOR} />
+        <div className={blockClass(0)}>
+          <ScreenHeader moduleId={4} label="Module 4 · Screen 13" title="Report design best practices "
+            subtitle="Beautiful reports communicate faster. Good design is good data analysis." moduleColor={M_COLOR} />
+        </div>
 
-        <div className="flex flex-col gap-4">
-          {PRINCIPLES.map(p => (
-            <div key={p.category} className="rounded-2xl p-4" style={{ backgroundColor: "#FFFFFF", border: `1.5px solid ${p.color}30` }}>
-              <div className="flex items-center gap-2 mb-3">
-                                <p className="font-black text-base" style={{ color: p.color }}>{p.category}</p>
+        {PRINCIPLES.map((p, idx) => (
+          <div key={p.category} className={`${blockClass(idx + 1)} rounded-2xl p-4 mb-4`} style={{ backgroundColor: "#FFFFFF", border: `1.5px solid ${p.color}30` }}>
+            <div className="flex items-center gap-2 mb-3">
+              <p className="font-black text-base" style={{ color: p.color }}>{p.category}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: "#2563EB" }}> Do</p>
+                {p.dos.map(d => (
+                  <p key={d} className="text-xs mb-1 flex gap-1" style={{ color: "#111827" }}><span style={{ color: "#2563EB", flexShrink: 0 }}>•</span> {d}</p>
+                ))}
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: "#2563EB" }}> Do</p>
-                  {p.dos.map(d => (
-                    <p key={d} className="text-xs mb-1 flex gap-1" style={{ color: "#111827" }}><span style={{ color: "#2563EB", flexShrink: 0 }}>•</span> {d}</p>
-                  ))}
-                </div>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: "#6B7280" }}>Don't</p>
-                  {p.donts.map(d => (
-                    <p key={d} className="text-xs mb-1 flex gap-1" style={{ color: "#111827" }}><span style={{ color: "#9CA3AF", flexShrink: 0 }}>•</span> {d}</p>
-                  ))}
-                </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: "#6B7280" }}>Don't</p>
+                {p.donts.map(d => (
+                  <p key={d} className="text-xs mb-1 flex gap-1" style={{ color: "#111827" }}><span style={{ color: "#9CA3AF", flexShrink: 0 }}>•</span> {d}</p>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+
+        {!isComplete && (
+          <button type="button"
+            onClick={() => { unlockVoice(); if (narrationScript[step + 1]) speak(narrationScript[step + 1]); next(); }}
+            className="w-full py-3 rounded-xl text-sm font-semibold transition-colors"
+            style={{ backgroundColor: "#EFF6FF", color: "#2563EB", border: "1.5px dashed #93C5FD" }}
+          >
+            {tapLabel} →
+          </button>
+        )}
       </div>
     </ModuleLayout>
   );

@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { getFlavorChartExample } from "@/data/module4";
 import { ScreenHeader } from "@/components/ui/ScreenSection";
+import { useBlockReveal } from "@/hooks/useBlockReveal";
+import { useSpeechContext } from "@/context/SpeechContext";
 
 const M_COLOR = "#2563EB";
 
@@ -19,7 +20,8 @@ const CF_TYPES = [
 ];
 
 export default function Screen9ConditionalFormatting({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
-  const { selectedFlavor } = useKaarani();
+  const { selectedFlavor, unlockVoice } = useKaarani();
+  const { speak } = useSpeechContext();
   const flavor = getFlavorById(selectedFlavor);
   const chartEx = getFlavorChartExample(selectedFlavor);
 
@@ -31,19 +33,32 @@ export default function Screen9ConditionalFormatting({ onNext, onPrev, screenInd
     { label: "Epsilon", value: 12, status: "low" },
   ];
 
+  const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(4);
+
+  const narrationScript = [
+    "Conditional formatting turns numbers into visual signals. Instead of reading 47 values looking for problems, a red cell jumps out immediately.",
+    `Look at the table — the data bars in the ${flavor.metric1Label} column show relative size at a glance. The icon column uses arrows for status. The colour scale column uses a gradient. All three applied at once.`,
+    "Five CF types: background colour for RAG status, font colour for positive/negative, data bars for magnitude, icon sets for tiers, and colour scale for heatmaps.",
+    `For ${flavor.label}, here's a great idea: ${chartEx.conditionalFormattingIdea}. Use CF sparingly — if every cell is coloured, the signal disappears.`,
+  ];
+
   return (
     <ModuleLayout moduleId={4} screenIndex={screenIndex} totalScreens={totalScreens}
       kaaraniText="Conditional formatting turns numbers into visual signals. Instead of reading 47 values looking for problems, a red cell jumps out immediately. It's one of the highest-impact features in Power BI for making reports actionable rather than just informational."
       kaaraniHint="Use conditional formatting sparingly. If every cell is coloured, the signal disappears. Reserve red for things that genuinely need attention — not just 'below average'."
       onPrev={onPrev}
-      primaryAction={{ label: "Bookmarks & buttons →", onClick: onNext }}
+      primaryAction={isComplete
+        ? { label: "Bookmarks & buttons →", onClick: onNext }
+        : { label: "Bookmarks & buttons →", onClick: onNext, disabled: true }}
     >
       <div className="max-w-2xl mx-auto">
-        <ScreenHeader moduleId={4} label="Module 4 · Screen 9" title="Conditional formatting "
-          subtitle="Turn numbers into visual signals. Red jumps out. Green means safe." moduleColor={M_COLOR} />
+        <div className={blockClass(0)}>
+          <ScreenHeader moduleId={4} label="Module 4 · Screen 9" title="Conditional formatting "
+            subtitle="Turn numbers into visual signals. Red jumps out. Green means safe." moduleColor={M_COLOR} />
+        </div>
 
         {/* Live CF demo */}
-        <div className="rounded-2xl overflow-hidden mb-5" style={{ border: "1.5px solid #E8E8E8" }}>
+        <div className={`${blockClass(1)} rounded-2xl overflow-hidden mb-5`} style={{ border: "1.5px solid #E8E8E8" }}>
           <div className="px-4 py-2" style={{ backgroundColor: "#FFFFFF"}}>
             <p className="text-xs font-bold uppercase tracking-wider" style={{ color: M_COLOR }}>
               {flavor.label} — all CF types applied
@@ -62,7 +77,6 @@ export default function Screen9ConditionalFormatting({ onNext, onPrev, screenInd
                 const bgColor = "#F9FAFB";
                 const textColor = r.status === "high" ? "#111827" : r.status === "mid" ? "#2563EB" : "#6B7280";
                 const icon = r.status === "high" ? "⬆" : r.status === "mid" ? "" : "⬇";
-                const scale = `hsl(${r.value * 0.8}, 70%, ${95 - r.value * 0.3}%)`;
                 return (
                   <tr key={r.label} style={{ borderBottom: "1px solid #F3F4F6" }}>
                     <td className="px-3 py-2 font-semibold" style={{ color: "#111827" }}>{r.label}</td>
@@ -88,10 +102,10 @@ export default function Screen9ConditionalFormatting({ onNext, onPrev, screenInd
         </div>
 
         {/* CF types */}
-        <div className="flex flex-col gap-2 mb-4">
+        <div className={`${blockClass(2)} flex flex-col gap-2 mb-4`}>
           {CF_TYPES.map(cf => (
             <div key={cf.type} className="flex items-start gap-3 p-3 rounded-xl" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}>
-                            <div>
+              <div>
                 <p className="font-bold text-xs" style={{ color: "#111827" }}>{cf.type}</p>
                 <p className="text-[10px] mb-1" style={{ color: "#6B7280" }}>{cf.desc}</p>
                 <p className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ backgroundColor: "#FFFFFF", color: M_COLOR }}>{cf.example}</p>
@@ -100,10 +114,20 @@ export default function Screen9ConditionalFormatting({ onNext, onPrev, screenInd
           ))}
         </div>
 
-        <div className="rounded-xl p-3" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
+        <div className={`${blockClass(3)} rounded-xl p-3`} style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
           <p className="text-xs font-bold mb-1" style={{ color: "#2563EB" }}>{flavor.label} CF idea</p>
           <p className="text-xs" style={{ color: "#111827" }}>{chartEx.conditionalFormattingIdea}</p>
         </div>
+
+        {!isComplete && (
+          <button type="button"
+            onClick={() => { unlockVoice(); if (narrationScript[step + 1]) speak(narrationScript[step + 1]); next(); }}
+            className="w-full py-3 rounded-xl text-sm font-semibold transition-colors mt-4"
+            style={{ backgroundColor: "#EFF6FF", color: "#2563EB", border: "1.5px dashed #93C5FD" }}
+          >
+            {tapLabel} →
+          </button>
+        )}
       </div>
     </ModuleLayout>
   );

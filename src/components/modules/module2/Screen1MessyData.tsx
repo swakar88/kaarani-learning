@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { getFlavorDataset } from "@/data/module2";
 import { ScreenHeader } from "@/components/ui/ScreenSection";
+import { useBlockReveal } from "@/hooks/useBlockReveal";
+import { useSpeechContext } from "@/context/SpeechContext";
 
 const M_COLOR = "#2563EB";
 
@@ -19,28 +20,20 @@ const MESSY_EXAMPLES = [
 ];
 
 export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
-  const { selectedFlavor, voiceEnabled } = useKaarani();
+  const { selectedFlavor, unlockVoice } = useKaarani();
+  const { speak } = useSpeechContext();
   const flavor = getFlavorById(selectedFlavor);
   const dataset = getFlavorDataset(selectedFlavor);
 
-  // -1 = before voice starts → show everything; 0+ = animate in per segment
-  const [cue, setCue] = useState(-1);
+  // 4 blocks: header(0), dataset card(1), problems list(2), Power Query callout(3)
+  const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(4);
 
   const narrationScript = [
-    `Welcome to Module 2!`,
-    `Here's the truth no one tells you: real-world ${flavor.label} data is almost never clean.`,
-    `It arrives with missing values, dates stored as text, duplicate rows, and inconsistent spellings.`,
-    `Power Query is Power BI's data preparation engine — and it's brilliant at fixing all of this.`,
+    `Welcome to Module 2! Here's the truth no one tells you: real-world ${flavor.label} data is almost never clean.`,
+    `Here's the dataset we'll work with this module. It's a real ${flavor.label} dataset. Notice the file type, the row count, and the source.`,
+    "Real data arrives with five common problems: dates stored as text, numbers mixed with currency symbols, missing values, duplicate rows, and inconsistent spellings. We'll fix every single one.",
+    "Power Query is Power BI's data preparation engine. It fixes all of this with clicks, not code. And every step is recorded as a recipe — so when new data arrives, it runs automatically.",
   ];
-
-  // Show element if voice is off, not yet started, or cue has reached that phase
-  const show = (phase: number) => !voiceEnabled || cue === -1 || cue >= phase;
-
-  const fadeStyle = (phase: number): React.CSSProperties => ({
-    opacity:    show(phase) ? 1 : 0,
-    transform:  show(phase) ? "none" : "translateY(12px)",
-    transition: "opacity 0.45s ease-out, transform 0.45s ease-out",
-  });
 
   return (
     <ModuleLayout
@@ -50,14 +43,16 @@ export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScr
       kaaraniText={`Welcome to Module 2! Here's the truth no one tells you: real-world ${flavor.label} data is almost never clean. It arrives with missing values, dates stored as text, duplicate rows, and inconsistent spellings. Power Query is Power BI's data preparation engine — and it's brilliant at fixing all of this.`}
       kaaraniHint="80% of a data analyst's time is data preparation. Getting good at Power Query is one of the highest-ROI skills you can develop."
       onPrev={onPrev}
-      primaryAction={{ label: "Show me the dataset →", onClick: onNext }}
-      narrationScript={narrationScript}
-      onCueChange={setCue}
+      primaryAction={
+        isComplete
+          ? { label: "Show me the dataset →", onClick: onNext }
+          : { label: "Show me the dataset →", onClick: onNext, disabled: true }
+      }
     >
       <div className="max-w-2xl mx-auto">
 
-        {/* Header — appears on cue 0 */}
-        <div style={fadeStyle(0)}>
+        {/* Block 0 — Header */}
+        <div className={blockClass(0)}>
           <ScreenHeader
             moduleId={2}
             label="Module 2 · Prepare & Clean Data"
@@ -67,9 +62,9 @@ export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScr
           />
         </div>
 
-        {/* Dataset card — appears on cue 1 */}
-        <div style={fadeStyle(1)}>
-          <div className="rounded-3xl p-6 mb-6" style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #E8E8E8" }}>
+        {/* Block 1 — Dataset card */}
+        <div className={`${blockClass(1)} mb-6`}>
+          <div className="rounded-3xl p-6" style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #E8E8E8" }}>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center font-black text-sm text-white flex-shrink-0" style={{ backgroundColor: M_COLOR }}>
                 {dataset.fileType.slice(0, 3).toUpperCase()}
@@ -94,10 +89,10 @@ export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScr
           </div>
         </div>
 
-        {/* Problems list — appears on cue 2, rows stagger in */}
-        <div style={fadeStyle(2)}>
-          <p className="text-sm font-bold mb-3" style={{ color: "#111827" }}>Common problems we'll fix in Power Query:</p>
-          <div className="flex flex-col gap-2 mb-6">
+        {/* Block 2 — Problems list */}
+        <div className={`${blockClass(2)} mb-6`}>
+          <p className="text-sm font-bold mb-3" style={{ color: "#111827" }}>Common problems we&apos;ll fix in Power Query:</p>
+          <div className="flex flex-col gap-2">
             {MESSY_EXAMPLES.map((ex, i) => (
               <div
                 key={ex.label}
@@ -105,9 +100,7 @@ export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScr
                 style={{
                   backgroundColor: "#FFFFFF",
                   border: "1px solid #E5E7EB",
-                  opacity:    show(2) ? 1 : 0,
-                  transform:  show(2) ? "none" : "translateY(8px)",
-                  transition: `opacity 0.4s ${i * 90}ms ease-out, transform 0.4s ${i * 90}ms ease-out`,
+                  animation: `cue-in 0.4s ease-out ${i * 100}ms both`,
                 }}
               >
                 <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black text-white flex-shrink-0" style={{ backgroundColor: M_COLOR }}>
@@ -126,8 +119,8 @@ export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScr
           </div>
         </div>
 
-        {/* Power Query callout — appears on cue 3 */}
-        <div style={fadeStyle(3)}>
+        {/* Block 3 — Power Query callout */}
+        <div className={`${blockClass(3)} mb-4`}>
           <div className="rounded-2xl p-4" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
             <p className="text-sm leading-relaxed" style={{ color: "#111827" }}>
               <span className="font-bold" style={{ color: "#2563EB" }}>Power Query</span> lets you fix all of these
@@ -136,6 +129,22 @@ export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScr
             </p>
           </div>
         </div>
+
+        {/* Tap to reveal */}
+        {!isComplete && (
+          <button
+            type="button"
+            onClick={() => {
+              unlockVoice();
+              if (narrationScript[step + 1]) speak(narrationScript[step + 1]);
+              next();
+            }}
+            className="w-full py-3 rounded-xl text-sm font-semibold transition-colors"
+            style={{ backgroundColor: "#EFF6FF", color: "#2563EB", border: "1.5px dashed #93C5FD" }}
+          >
+            {tapLabel} →
+          </button>
+        )}
 
       </div>
     </ModuleLayout>

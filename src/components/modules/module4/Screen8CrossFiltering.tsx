@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { ScreenHeader } from "@/components/ui/ScreenSection";
+import { useBlockReveal } from "@/hooks/useBlockReveal";
+import { useSpeechContext } from "@/context/SpeechContext";
 
 const M_COLOR = "#2563EB";
 
@@ -18,25 +20,38 @@ const ALL_DATA = [
 ];
 
 export default function Screen8CrossFiltering({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
-  const { selectedFlavor } = useKaarani();
+  const { selectedFlavor, unlockVoice } = useKaarani();
+  const { speak } = useSpeechContext();
   const flavor = getFlavorById(selectedFlavor);
   const [selected, setSelected] = useState<string | null>(null);
 
   const filtered = selected ? ALL_DATA.filter(d => d.dim2 === selected) : ALL_DATA;
   const maxVal = Math.max(...ALL_DATA.map(d => d.m1));
 
+  const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(3);
+
+  const narrationScript = [
+    "Cross-filtering is Power BI's signature magic. When you click any element in any visual — a bar, a pie slice, a map bubble — all other visuals on the page filter to show only related data.",
+    `Try it now — click a ${flavor.dimension2Label} group on the left and watch the bar chart on the right respond. This is exactly how it works in a live Power BI report.`,
+    "You can control this behaviour with Edit Interactions in the Format ribbon. For each pair of visuals, choose Cross-filter to show only related rows, Cross-highlight to dim non-related bars, or None to disconnect them entirely.",
+  ];
+
   return (
     <ModuleLayout moduleId={4} screenIndex={screenIndex} totalScreens={totalScreens}
       kaaraniText="Cross-filtering is Power BI's signature magic. When you click any element in any visual — a bar, a pie slice, a map bubble — all other visuals on the page filter to show only data related to your click. It's the same as applying a slicer, but triggered by clicking a visual."
       kaaraniHint="You can change filter direction: Edit Interactions (Format ribbon). For each pair of visuals, choose Cross-filter, Cross-highlight, or None. Cross-highlight shows the proportion of the total — useful for 'how much of this bar relates to that click'."
       onPrev={onPrev}
-      primaryAction={{ label: "Conditional formatting →", onClick: onNext }}
+      primaryAction={isComplete
+        ? { label: "Conditional formatting →", onClick: onNext }
+        : { label: "Conditional formatting →", onClick: onNext, disabled: true }}
     >
       <div className="max-w-2xl mx-auto">
-        <ScreenHeader moduleId={4} label="Module 4 · Screen 8" title="Cross-filtering — click anything, filter everything "
-          subtitle="Click a bar below. Watch the second visual respond." moduleColor={M_COLOR} />
+        <div className={blockClass(0)}>
+          <ScreenHeader moduleId={4} label="Module 4 · Screen 8" title="Cross-filtering — click anything, filter everything "
+            subtitle="Click a bar below. Watch the second visual respond." moduleColor={M_COLOR} />
+        </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-5">
+        <div className={`${blockClass(1)} grid grid-cols-2 gap-4 mb-5`}>
           {/* Left: pie-style selector (Group) */}
           <div className="rounded-2xl p-4" style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #E8E8E8" }}>
             <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: M_COLOR }}>
@@ -81,7 +96,7 @@ export default function Screen8CrossFiltering({ onNext, onPrev, screenIndex, tot
           </div>
         </div>
 
-        <div className="rounded-xl p-3 mb-3" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
+        <div className={`${blockClass(2)} rounded-xl p-3 mb-3`} style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
           <p className="text-xs font-bold mb-1" style={{ color: "#2563EB" }}>Edit Interactions (Format ribbon)</p>
           <div className="grid grid-cols-3 gap-2">
             {[
@@ -90,12 +105,22 @@ export default function Screen8CrossFiltering({ onNext, onPrev, screenIndex, tot
               { icon: "", label: "None", desc: "This click has no effect on that visual" },
             ].map(opt => (
               <div key={opt.label} className="text-center">
-                                <p className="text-[10px] font-bold" style={{ color: "#2563EB" }}>{opt.label}</p>
+                <p className="text-[10px] font-bold" style={{ color: "#2563EB" }}>{opt.label}</p>
                 <p className="text-[9px]" style={{ color: "#6B7280" }}>{opt.desc}</p>
               </div>
             ))}
           </div>
         </div>
+
+        {!isComplete && (
+          <button type="button"
+            onClick={() => { unlockVoice(); if (narrationScript[step + 1]) speak(narrationScript[step + 1]); next(); }}
+            className="w-full py-3 rounded-xl text-sm font-semibold transition-colors"
+            style={{ backgroundColor: "#EFF6FF", color: "#2563EB", border: "1.5px dashed #93C5FD" }}
+          >
+            {tapLabel} →
+          </button>
+        )}
       </div>
     </ModuleLayout>
   );

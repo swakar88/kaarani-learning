@@ -42,19 +42,39 @@ function loadVoices(): Promise<SpeechSynthesisVoice[]> {
   });
 }
 
+// Priority list — most human-like first.
+// Microsoft Edge neural voices (marked "Natural") are the best available in browsers.
+// Falls back progressively to decent system voices.
+const VOICE_PRIORITY = [
+  // Edge / Windows neural voices (most human-like)
+  "Microsoft Aria Online (Natural)",
+  "Microsoft Jenny Online (Natural)",
+  "Microsoft Michelle Online (Natural)",
+  "Microsoft Ana Online (Natural)",
+  "Microsoft Sara Online (Natural)",
+  "Microsoft Aria",
+  "Microsoft Jenny",
+  // Chrome on Windows
+  "Google US English",
+  "Google UK English Female",
+  // macOS / iOS
+  "Samantha",
+  "Karen",
+  "Moira",
+  "Tessa",
+  // Older Windows fallback
+  "Microsoft Zira Desktop",
+  "Zira",
+];
+
 function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
-  return (
-    voices.find(
-      v =>
-        v.lang.startsWith("en") &&
-        (v.name.includes("Female") ||
-          v.name.includes("Samantha") ||
-          v.name.includes("Karen") ||
-          v.name.includes("Moira") ||
-          v.name.includes("Zira") ||
-          v.name.includes("Google UK English Female"))
-    ) ?? null
-  );
+  // Try each preferred name in order
+  for (const name of VOICE_PRIORITY) {
+    const match = voices.find(v => v.name.includes(name) && v.lang.startsWith("en"));
+    if (match) return match;
+  }
+  // Last resort: any English female voice
+  return voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("female")) ?? null;
 }
 
 export function useSpeech(): UseSpeechReturn {
@@ -90,8 +110,8 @@ export function useSpeech(): UseSpeechReturn {
       if (cancelledRef.current) { resolve(); return; }
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.92;
-      utterance.pitch = 1.05;
+      utterance.rate = 1.0;   // natural pace — neural voices already have good rhythm
+      utterance.pitch = 1.0;  // flat pitch — neural voices handle expressiveness themselves
       utterance.volume = 1.0;
       const preferred = pickVoice(voices);
       if (preferred) utterance.voice = preferred;
