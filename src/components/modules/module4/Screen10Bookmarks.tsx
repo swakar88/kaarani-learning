@@ -1,32 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { ScreenHeader, PowerBICallout } from "@/components/ui/ScreenSection";
+import { useBlockReveal } from "@/hooks/useBlockReveal";
+import { useSpeechContext } from "@/context/SpeechContext";
 
 const M_COLOR = "#2563EB";
 
 export default function Screen10Bookmarks({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
-  const { selectedFlavor } = useKaarani();
+  const { selectedFlavor, unlockVoice } = useKaarani();
+  const { speak } = useSpeechContext();
   const flavor = getFlavorById(selectedFlavor);
   const [view, setView] = useState<"overview" | "detail">("overview");
+
+  const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(4);
+
+  const narrationScript = [
+    "Bookmarks let you save the state of a report — which visuals are visible, what filters are applied — and switch between states with a button click.",
+    "This is how you build navigation, toggle between views, and create animated storytelling in Power BI. Try toggling between Overview and Detail mode below.",
+    "Four powerful use cases: page navigation that feels like tabs, show or hide visuals without a new page, storytelling where each bookmark is a chapter, and a Reset button that returns to default state.",
+    "Creating bookmarks is simple: View ribbon → Bookmarks pane. Set the state you want. Click Add. Then insert a Button with Action → Bookmark → select it. Test in Reading View.",
+  ];
 
   return (
     <ModuleLayout moduleId={4} screenIndex={screenIndex} totalScreens={totalScreens}
       kaaraniText="Bookmarks let you save the state of a report — which visuals are visible, what filters are applied — and switch between states with a button click. This is how you build navigation, toggle between views, and create animated storytelling in Power BI."
       kaaraniHint="Bookmarks combined with Buttons create the closest thing to an app inside Power BI. You can build a full navigation menu that switches between report pages."
       onPrev={onPrev}
-      primaryAction={{ label: "Forecasting →", onClick: onNext }}
+      primaryAction={isComplete
+        ? { label: "Forecasting →", onClick: onNext }
+        : { label: "Forecasting →", onClick: onNext, disabled: true }}
     >
       <div className="max-w-2xl mx-auto">
-        <ScreenHeader moduleId={4} label="Module 4 · Screen 10" title="Bookmarks & Buttons "
-          subtitle="Save report states. Build navigation. Create interactive storytelling." moduleColor={M_COLOR} />
+        <div className={blockClass(0)}>
+          <ScreenHeader moduleId={4} label="Module 4 · Screen 10" title="Bookmarks & Buttons "
+            subtitle="Save report states. Build navigation. Create interactive storytelling." moduleColor={M_COLOR} />
+        </div>
 
         {/* Interactive demo */}
-        <div className="rounded-3xl p-5 mb-5" style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #E8E8E8" }}>
+        <div className={`${blockClass(1)} rounded-3xl p-5 mb-5`} style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #E8E8E8" }}>
           <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: M_COLOR }}>
             Live demo — toggle view with bookmarks
           </p>
@@ -74,7 +90,7 @@ export default function Screen10Bookmarks({ onNext, onPrev, screenIndex, totalSc
         </div>
 
         {/* Use cases */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className={`${blockClass(2)} grid grid-cols-2 gap-3 mb-4`}>
           {[
             { icon: "", label: "Page navigation", desc: "Buttons that act like tabs between report pages" },
             { icon: "", label: "Show/hide visuals", desc: "Toggle a chart on/off without adding a new page" },
@@ -82,14 +98,26 @@ export default function Screen10Bookmarks({ onNext, onPrev, screenIndex, totalSc
             { icon: "", label: "Reset filters", desc: "A 'Reset' button that returns to the default bookmark state" },
           ].map(u => (
             <div key={u.label} className="rounded-xl p-3" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}>
-                            <p className="font-bold text-xs mt-1.5 mb-0.5" style={{ color: "#111827" }}>{u.label}</p>
+              <p className="font-bold text-xs mt-1.5 mb-0.5" style={{ color: "#111827" }}>{u.label}</p>
               <p className="text-[10px]" style={{ color: "#6B7280" }}>{u.desc}</p>
             </div>
           ))}
         </div>
 
-        <PowerBICallout title="How to create bookmarks"
-          items={["View ribbon → Bookmarks pane", "Set the visual/filter state you want", "Bookmarks pane → Add", "Insert a Button → Action → Bookmark → select it", "Test in Reading View"]} />
+        <div className={`${blockClass(3)} mb-4`}>
+          <PowerBICallout title="How to create bookmarks"
+            items={["View ribbon → Bookmarks pane", "Set the visual/filter state you want", "Bookmarks pane → Add", "Insert a Button → Action → Bookmark → select it", "Test in Reading View"]} />
+        </div>
+
+        {!isComplete && (
+          <button type="button"
+            onClick={() => { unlockVoice(); if (narrationScript[step + 1]) speak(narrationScript[step + 1]); next(); }}
+            className="w-full py-3 rounded-xl text-sm font-semibold transition-colors"
+            style={{ backgroundColor: "#EFF6FF", color: "#2563EB", border: "1.5px dashed #93C5FD" }}
+          >
+            {tapLabel} →
+          </button>
+        )}
       </div>
     </ModuleLayout>
   );

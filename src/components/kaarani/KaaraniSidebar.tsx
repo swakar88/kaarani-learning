@@ -1,71 +1,45 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { useSpeech } from "@/hooks/useSpeech";
+import React, { useEffect } from "react";
+import { useSpeechContext } from "@/context/SpeechContext";
 import { useKaarani } from "@/context/KaaraniContext";
+import { KaaraniAvatar } from "./KaaraniAvatar";
 
 interface KaaraniSidebarProps {
   text: string;
   hint?: string;
-  screenKey?: string | number;
-  script?: string[];                      // optional scripted segments
-  onCueChange?: (cue: number) => void;    // fires when each segment starts
 }
 
-export function KaaraniSidebar({ text, hint, screenKey, script, onCueChange }: KaaraniSidebarProps) {
-  const { voiceEnabled, setVoiceEnabled } = useKaarani();
-  const { speak, speakScript, stop, isSpeaking, isSupported } = useSpeech();
-  const hasSpokeRef = useRef<string | number | null>(null);
+export function KaaraniSidebar({ text, hint }: KaaraniSidebarProps) {
+  const { voiceEnabled, setVoiceEnabled, voiceUnlocked, unlockVoice } = useKaarani();
+  const { speak, stop, isSpeaking, isSupported } = useSpeechContext();
 
-  useEffect(() => {
-    if (!voiceEnabled) return;
-    if (hasSpokeRef.current === screenKey) return;
-    hasSpokeRef.current = screenKey ?? "init";
-
-    const timer = setTimeout(() => {
-      if (script && script.length > 0) {
-        speakScript(script, onCueChange);
-      } else {
-        speak(text);
-      }
-    }, 600);
-
-    return () => {
-      clearTimeout(timer);
-      stop();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [screenKey, voiceEnabled]);
-
+  // Stop speech when muted
   useEffect(() => {
     if (!voiceEnabled) stop();
   }, [voiceEnabled, stop]);
 
   const handleReplay = () => {
-    if (script && script.length > 0) {
-      speakScript(script, onCueChange);
-    } else {
-      speak(text);
-    }
+    if (!voiceUnlocked) unlockVoice();
+    speak(text);
   };
 
   return (
     <div className="flex flex-col gap-5 h-full">
 
-      {/* Avatar + voice bars */}
+      {/* Avatar + status */}
       <div className="flex items-center gap-3 pb-4 border-b" style={{ borderColor: "#F3F4F6" }}>
-        <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-base flex-shrink-0 ${isSpeaking ? "animate-kaarani-pulse" : ""}`}
-          style={{ backgroundColor: "#2563EB" }}>
-          K
-        </div>
+        <KaaraniAvatar
+          size={44}
+          emotion={isSpeaking ? "talking" : "idle"}
+        />
         <div className="flex-1">
           <p className="text-sm font-semibold" style={{ color: "#111827" }}>Kaarani</p>
           <p className="text-xs" style={{ color: "#9CA3AF" }}>
             {isSpeaking ? "Speaking…" : "Your guide"}
           </p>
         </div>
-        {/* Voice wave bars — always visible, animated when speaking */}
+        {/* Voice wave bars */}
         {isSupported && voiceEnabled && (
           <div className="flex items-end gap-0.5" style={{ height: "18px" }}>
             {[0, 1, 2, 3, 4].map(i => (
@@ -101,11 +75,19 @@ export function KaaraniSidebar({ text, hint, screenKey, script, onCueChange }: K
       {/* Voice controls */}
       {isSupported && (
         <div className="flex items-center gap-2 pt-4 border-t" style={{ borderColor: "#F3F4F6" }}>
-          <button type="button" onClick={handleReplay} disabled={isSpeaking}
-            className="flex-1 py-2 text-xs font-medium rounded-lg border transition-colors disabled:opacity-40"
-            style={{ borderColor: "#E5E7EB", color: "#6B7280", backgroundColor: "#FFFFFF" }}>
-            Replay
-          </button>
+          {!voiceUnlocked ? (
+            <button type="button" onClick={handleReplay}
+              className="flex-1 py-2 text-xs font-semibold rounded-lg border transition-colors"
+              style={{ borderColor: "#2563EB", color: "#2563EB", backgroundColor: "#EFF6FF" }}>
+              Tap to hear Kaarani
+            </button>
+          ) : (
+            <button type="button" onClick={handleReplay} disabled={isSpeaking}
+              className="flex-1 py-2 text-xs font-medium rounded-lg border transition-colors disabled:opacity-40"
+              style={{ borderColor: "#E5E7EB", color: "#6B7280", backgroundColor: "#FFFFFF" }}>
+              Replay
+            </button>
+          )}
           <button type="button"
             onClick={() => { if (voiceEnabled) stop(); setVoiceEnabled(!voiceEnabled); }}
             className="py-2 px-3 text-xs font-medium rounded-lg border transition-colors"

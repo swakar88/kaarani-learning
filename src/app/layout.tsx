@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { KaaraniProvider } from "@/context/KaaraniContext";
+import { SpeechProvider } from "@/context/SpeechContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} h-full`}>
       <body className="min-h-full flex flex-col" style={{ backgroundColor: "#F8FAFC" }}>
-        <KaaraniProvider>{children}</KaaraniProvider>
+        <KaaraniProvider><SpeechProvider>{children}</SpeechProvider></KaaraniProvider>
       </body>
     </html>
   );

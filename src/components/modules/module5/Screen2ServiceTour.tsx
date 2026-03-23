@@ -1,10 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
+import { useKaarani } from "@/context/KaaraniContext";
 import { ScreenHeader } from "@/components/ui/ScreenSection";
 import { Placeholder } from "@/components/ui/Placeholder";
+import { useBlockReveal } from "@/hooks/useBlockReveal";
+import { useSpeechContext } from "@/context/SpeechContext";
 
 const M_COLOR = "#2563EB";
 
@@ -18,38 +21,68 @@ const SERVICE_ZONES = [
 ];
 
 export default function Screen2ServiceTour({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
+  const { unlockVoice } = useKaarani();
+  const { speak } = useSpeechContext();
   const [active, setActive] = useState("workspaces");
   const current = SERVICE_ZONES.find(z => z.id === active)!;
+
+  const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(3);
+
+  const narrationScript = [
+    "Power BI Service at app.powerbi.com is the cloud hub. Think of it as OneDrive for Power BI reports — but with collaboration, scheduling, security and sharing built in.",
+    "Six areas to know: Home for your recent work, Workspaces for team collaboration, Apps for consumers, Datasets as shared data models, Dataflows for reusable Power Query, and the Gateway for on-premise data.",
+    "The architecture to remember: Workspaces are where you collaborate. Apps are what you share with consumers. Datasets are shared data models. These three form the core of Power BI governance.",
+  ];
 
   return (
     <ModuleLayout moduleId={5} screenIndex={screenIndex} totalScreens={totalScreens}
       kaaraniText="Power BI Service at app.powerbi.com is the cloud hub. Think of it as OneDrive for Power BI reports — but with collaboration, scheduling, security and sharing built in. You'll spend most of your sharing and admin time here."
       kaaraniHint="Workspaces are where you collaborate. Apps are what you share with consumers. Datasets are shared data models. These three form the core architecture of Power BI governance."
       onPrev={onPrev}
-      primaryAction={{ label: "Publish a report →", onClick: onNext }}
+      primaryAction={isComplete
+        ? { label: "Publish a report →", onClick: onNext }
+        : { label: "Publish a report →", onClick: onNext, disabled: true }}
     >
       <div className="max-w-2xl mx-auto">
-        <ScreenHeader moduleId={5} label="Module 5 · Screen 2" title="Power BI Service tour "
-          subtitle="app.powerbi.com — explore the key areas." moduleColor={M_COLOR} />
-
-        <Placeholder type="image" label="[Power BI Service screenshot: left nav with Home, Workspaces, Apps, Datasets labelled]" height="130px" className="mb-4" />
-
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          {SERVICE_ZONES.map(z => (
-            <button key={z.id} type="button" onClick={() => setActive(z.id)}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 cursor-pointer transition-all"
-              style={{ borderColor: active === z.id ? M_COLOR : "#E5E7EB", backgroundColor: active === z.id ? M_COLOR + "12" : "#FFFFFF" }}>
-                            <p className="text-xs font-bold text-center" style={{ color: active === z.id ? M_COLOR : "#3D2B1F" }}>{z.label}</p>
-            </button>
-          ))}
+        <div className={blockClass(0)}>
+          <ScreenHeader moduleId={5} label="Module 5 · Screen 2" title="Power BI Service tour "
+            subtitle="app.powerbi.com — explore the key areas." moduleColor={M_COLOR} />
+          <Placeholder type="image" label="[Power BI Service screenshot: left nav with Home, Workspaces, Apps, Datasets labelled]" height="130px" className="mb-4" />
         </div>
 
-        <div className="rounded-2xl p-4 animate-fade-in-up" style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #E8E8E8" }}>
-          <div className="flex items-center gap-3 mb-2">
-                        <p className="font-black" style={{ color: M_COLOR }}>{current.label}</p>
+        <div className={`${blockClass(1)} mb-4`}>
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            {SERVICE_ZONES.map(z => (
+              <button key={z.id} type="button" onClick={() => setActive(z.id)}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 cursor-pointer transition-all"
+                style={{ borderColor: active === z.id ? M_COLOR : "#E5E7EB", backgroundColor: active === z.id ? M_COLOR + "12" : "#FFFFFF" }}>
+                <p className="text-xs font-bold text-center" style={{ color: active === z.id ? M_COLOR : "#3D2B1F" }}>{z.label}</p>
+              </button>
+            ))}
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: "#111827" }}>{current.desc}</p>
+
+          <div className="rounded-2xl p-4 animate-fade-in-up" style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #E8E8E8" }}>
+            <div className="flex items-center gap-3 mb-2">
+              <p className="font-black" style={{ color: M_COLOR }}>{current.label}</p>
+            </div>
+            <p className="text-sm leading-relaxed" style={{ color: "#111827" }}>{current.desc}</p>
+          </div>
         </div>
+
+        <div className={`${blockClass(2)} rounded-xl p-3`} style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
+          <p className="text-xs font-bold mb-1" style={{ color: "#2563EB" }}>The governance triangle</p>
+          <p className="text-xs" style={{ color: "#111827" }}>Workspaces (build) → Datasets (share models) → Apps (consume). Never give business users direct workspace access — that's what Apps are for.</p>
+        </div>
+
+        {!isComplete && (
+          <button type="button"
+            onClick={() => { unlockVoice(); if (narrationScript[step + 1]) speak(narrationScript[step + 1]); next(); }}
+            className="w-full py-3 rounded-xl text-sm font-semibold transition-colors mt-4"
+            style={{ backgroundColor: "#EFF6FF", color: "#2563EB", border: "1.5px dashed #93C5FD" }}
+          >
+            {tapLabel} →
+          </button>
+        )}
       </div>
     </ModuleLayout>
   );

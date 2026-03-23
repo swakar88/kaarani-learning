@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
+import { useBlockReveal } from "@/hooks/useBlockReveal";
+import { useSpeechContext } from "@/context/SpeechContext";
 
 // Flavor-aware story openings
 const STORY_OPENERS: Record<string, { role: string; scenario: string; question: string }> = {
@@ -74,9 +75,18 @@ export default function Screen1StoryHook({
   screenIndex,
   totalScreens,
 }: ScreenProps) {
-  const { selectedFlavor } = useKaarani();
+  const { selectedFlavor, unlockVoice } = useKaarani();
+  const { speak } = useSpeechContext();
   const flavor = getFlavorById(selectedFlavor);
   const story = STORY_OPENERS[selectedFlavor] ?? DEFAULT_STORY;
+
+  const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(3);
+
+  const narrationScript = [
+    "Before we open Power BI, let me set the scene. Every industry has the same problem — too much data and not enough answers.",
+    `You are the ${story.role}. ${story.scenario} That's your situation.`,
+    `But then comes the question that changes everything. ${story.question} — This gap between raw data and real answers is exactly what data analytics fills.`,
+  ];
 
   return (
     <ModuleLayout
@@ -86,11 +96,15 @@ export default function Screen1StoryHook({
       kaaraniText={KAARANI_TEXT}
       kaaraniHint={KAARANI_HINT}
       onPrev={onPrev}
-      primaryAction={{ label: "So... what IS data analytics?", onClick: onNext }}
+      primaryAction={
+        isComplete
+          ? { label: "So... what IS data analytics?", onClick: onNext }
+          : { label: "So... what IS data analytics?", onClick: onNext, disabled: true }
+      }
     >
       <div className="max-w-2xl mx-auto">
-        {/* Module heading */}
-        <div className="mb-8">
+        {/* Block 0: Module heading */}
+        <div className={blockClass(0)} style={{ marginBottom: "2rem" }}>
           <span
             className="text-xs font-bold uppercase tracking-widest"
             style={{ color: "#2563EB" }}
@@ -102,64 +116,83 @@ export default function Screen1StoryHook({
           </h1>
         </div>
 
-        {/* Story card */}
-        <div
-          className="rounded-3xl p-8 mb-6"
-          style={{
-            background: "linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%)",
-            border: "1px solid #E5E7EB",
-          }}
-        >
-          {/* Role badge */}
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-4xl"></span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: "#2563EB" }}>
-                You are the…
+        {/* Block 1: Story card */}
+        <div className={`${blockClass(1)} mb-4`}>
+          <div
+            className="rounded-3xl p-8 mb-6"
+            style={{
+              background: "linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%)",
+              border: "1px solid #E5E7EB",
+            }}
+          >
+            {/* Role badge */}
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-4xl"></span>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: "#2563EB" }}>
+                  You are the…
+                </p>
+                <p className="text-xl font-black" style={{ color: "#111827" }}>
+                  {story.role}
+                </p>
+              </div>
+            </div>
+
+            {/* Scenario */}
+            <div
+              className="rounded-2xl p-5 mb-4"
+              style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}
+            >
+              <p className="text-base leading-relaxed" style={{ color: "#111827" }}>
+                 {story.scenario}
               </p>
-              <p className="text-xl font-black" style={{ color: "#111827" }}>
-                {story.role}
+            </div>
+
+            {/* The hard question */}
+            <div
+              className="rounded-2xl p-5"
+              style={{ backgroundColor: "#FFFFFF", border: "2px dashed #2563EB" }}
+            >
+              <p className="text-base font-semibold leading-relaxed" style={{ color: "#1D4ED8" }}>
+                 {story.question}
               </p>
             </div>
           </div>
+        </div>
 
-          {/* Scenario */}
+        {/* Block 2: Gap insight box */}
+        <div className={`${blockClass(2)} mb-4`}>
           <div
-            className="rounded-2xl p-5 mb-4"
+            className="flex items-start gap-4 rounded-2xl p-5"
             style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}
           >
-            <p className="text-base leading-relaxed" style={{ color: "#111827" }}>
-               {story.scenario}
-            </p>
+            <span className="text-2xl mt-0.5"></span>
+            <div>
+              <p className="font-bold text-sm mb-1" style={{ color: "#2563EB" }}>
+                This is the gap data analytics fills.
+              </p>
+              <p className="text-sm leading-relaxed" style={{ color: "#111827" }}>
+                Raw numbers can&apos;t answer these questions. Analytics is the process of
+                turning those numbers into answers — and eventually, decisions.
+              </p>
+            </div>
           </div>
+        </div>
 
-          {/* The hard question */}
-          <div
-            className="rounded-2xl p-5"
-            style={{ backgroundColor: "#FFFFFF", border: "2px dashed #2563EB" }}
+        {!isComplete && (
+          <button
+            type="button"
+            onClick={() => {
+              unlockVoice();
+              if (narrationScript[step + 1]) speak(narrationScript[step + 1]);
+              next();
+            }}
+            className="w-full py-3 rounded-xl text-sm font-semibold transition-colors"
+            style={{ backgroundColor: "#EFF6FF", color: "#2563EB", border: "1.5px dashed #93C5FD" }}
           >
-            <p className="text-base font-semibold leading-relaxed" style={{ color: "#1D4ED8" }}>
-               {story.question}
-            </p>
-          </div>
-        </div>
-
-        {/* The gap */}
-        <div
-          className="flex items-start gap-4 rounded-2xl p-5"
-          style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}
-        >
-          <span className="text-2xl mt-0.5"></span>
-          <div>
-            <p className="font-bold text-sm mb-1" style={{ color: "#2563EB" }}>
-              This is the gap data analytics fills.
-            </p>
-            <p className="text-sm leading-relaxed" style={{ color: "#111827" }}>
-              Raw numbers can&apos;t answer these questions. Analytics is the process of
-              turning those numbers into answers — and eventually, decisions.
-            </p>
-          </div>
-        </div>
+            {tapLabel} →
+          </button>
+        )}
       </div>
     </ModuleLayout>
   );

@@ -105,3 +105,26 @@ body {
 .animate-cue-in {
   animation: cue-in 0.45s ease-out both;
 }
+
+/* Kaarani avatar mouth animation when speaking */
+@keyframes kaarani-mouth-anim {
+  0%, 100% { transform: scaleY(0.25); }
+  50%      { transform: scaleY(1); }
+}
+.kaarani-mouth-talk {
+  animation: kaarani-mouth-anim 0.28s ease-in-out infinite alternate;
+  transform-origin: 50px 67px;
+}
+
+/* Kaarani avatar eye blink */
+@keyframes kaarani-blink {
+  0%, 88%, 100% { transform: scaleY(1); }
+  94%           { transform: scaleY(0.08); }
+}
+.kaarani-eye {
+  animation: kaarani-blink 4s ease-in-out infinite;
+  transform-origin: center;
+}
+.kaarani-eye.right {
+  animation-delay: 0.12s;
+}

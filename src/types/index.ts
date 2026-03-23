@@ -64,6 +64,8 @@ export interface KaaraniState {
   setSelectedFlavor: (id: string) => void;
   voiceEnabled: boolean;
   setVoiceEnabled: (v: boolean) => void;
+  voiceUnlocked: boolean; // true once user has clicked anything (browser gesture)
+  unlockVoice: () => void;
   completedModules: number[];
   markModuleComplete: (id: number) => void;
   currentModule: number;

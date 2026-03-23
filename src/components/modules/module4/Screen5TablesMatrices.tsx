@@ -1,17 +1,21 @@
 "use client";
 
-import React from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { ScreenHeader, PowerBICallout } from "@/components/ui/ScreenSection";
+import { useBlockReveal } from "@/hooks/useBlockReveal";
+import { useSpeechContext } from "@/context/SpeechContext";
 
 const M_COLOR = "#2563EB";
 
 export default function Screen5TablesMatrices({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
-  const { selectedFlavor } = useKaarani();
+  const { selectedFlavor, unlockVoice } = useKaarani();
+  const { speak } = useSpeechContext();
   const flavor = getFlavorById(selectedFlavor);
+
+  const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(4);
 
   const sampleRows = [
     { dim1: "Alpha", dim2: "Group A", m1: 847, m2: 42, highlight: true },
@@ -21,19 +25,30 @@ export default function Screen5TablesMatrices({ onNext, onPrev, screenIndex, tot
     { dim1: "Epsilon", dim2: "Group A", m1: 380, m2: 14, highlight: false },
   ];
 
+  const narrationScript = [
+    "Tables and Matrices are the detail visuals. When someone says 'I want to export to Excel', they're thinking of the Table visual.",
+    `Here's a live table for ${flavor.label} data — notice the data bars inside the ${flavor.metric1Label} column. That's conditional formatting making the numbers visually scannable.`,
+    "The Table shows one row per item. The Matrix adds row and column groupings — like a pivot table. Both support drill-down and conditional formatting.",
+    "Power BI tables have excellent features: data bars, background colour rules, icon sets, and drill-down on matrix rows. Always set column widths manually — auto-width makes columns too narrow.",
+  ];
+
   return (
     <ModuleLayout moduleId={4} screenIndex={screenIndex} totalScreens={totalScreens}
       kaaraniText="Tables and Matrices are the detail visuals. When someone says 'I want to export to Excel', they're thinking Table visual. The Matrix adds row and column groupings — like a pivot table. Both support conditional formatting to add visual hierarchy to numbers."
       kaaraniHint="Always set column width manually in a Table visual. Auto-width makes columns too narrow. Use the Format pane → Values → column-specific width."
       onPrev={onPrev}
-      primaryAction={{ label: "Maps & geo visuals →", onClick: onNext }}
+      primaryAction={isComplete
+        ? { label: "Maps & geo visuals →", onClick: onNext }
+        : { label: "Maps & geo visuals →", onClick: onNext, disabled: true }}
     >
       <div className="max-w-2xl mx-auto">
-        <ScreenHeader moduleId={4} label="Module 4 · Screen 5" title="Tables & Matrices "
-          subtitle="Detail and drill-down. The Excel of Power BI visuals." moduleColor={M_COLOR} />
+        <div className={blockClass(0)}>
+          <ScreenHeader moduleId={4} label="Module 4 · Screen 5" title="Tables & Matrices "
+            subtitle="Detail and drill-down. The Excel of Power BI visuals." moduleColor={M_COLOR} />
+        </div>
 
         {/* Live table example */}
-        <div className="rounded-2xl overflow-hidden mb-5" style={{ border: "1.5px solid #E8E8E8" }}>
+        <div className={`${blockClass(1)} rounded-2xl overflow-hidden mb-5`} style={{ border: "1.5px solid #E8E8E8" }}>
           <div className="px-4 py-2" style={{ backgroundColor: "#FFFFFF"}}>
             <p className="text-xs font-bold uppercase tracking-wider" style={{ color: M_COLOR }}>
               Table: {flavor.label} — {flavor.dimension1Label} performance
@@ -68,20 +83,32 @@ export default function Screen5TablesMatrices({ onNext, onPrev, screenIndex, tot
         </div>
 
         {/* Table vs Matrix */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className={`${blockClass(2)} grid grid-cols-2 gap-3 mb-4`}>
           {[
             { type: "Table", icon: "", use: "One row per item. All columns shown at once. Best for detailed lists.", fields: "Columns + Values" },
             { type: "Matrix", icon: "", use: "Row groups + column groups = pivot table. Drill-down enabled. Best for cross-analysis.", fields: "Rows + Columns + Values" },
           ].map(v => (
             <div key={v.type} className="rounded-xl p-4" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}>
-                            <p className="font-bold text-sm mt-2 mb-1" style={{ color: "#111827" }}>{v.type}</p>
+              <p className="font-bold text-sm mt-2 mb-1" style={{ color: "#111827" }}>{v.type}</p>
               <p className="text-xs leading-snug mb-2" style={{ color: "#6B7280" }}>{v.use}</p>
               <span className="text-[10px] px-2 py-0.5 rounded-full font-mono" style={{ backgroundColor: "#FFFFFF"}}>Fields: {v.fields}</span>
             </div>
           ))}
         </div>
 
-        <PowerBICallout items={["Data bars (colour bars inside cells)", "Background colour rules", "Icon sets (  )", "Drill-down on rows (matrix only)", "Export to CSV/Excel"]} />
+        <div className={`${blockClass(3)} mb-4`}>
+          <PowerBICallout items={["Data bars (colour bars inside cells)", "Background colour rules", "Icon sets (  )", "Drill-down on rows (matrix only)", "Export to CSV/Excel"]} />
+        </div>
+
+        {!isComplete && (
+          <button type="button"
+            onClick={() => { unlockVoice(); if (narrationScript[step + 1]) speak(narrationScript[step + 1]); next(); }}
+            className="w-full py-3 rounded-xl text-sm font-semibold transition-colors"
+            style={{ backgroundColor: "#EFF6FF", color: "#2563EB", border: "1.5px dashed #93C5FD" }}
+          >
+            {tapLabel} →
+          </button>
+        )}
       </div>
     </ModuleLayout>
   );
