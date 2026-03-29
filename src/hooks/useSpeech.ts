@@ -46,25 +46,28 @@ function loadVoices(): Promise<SpeechSynthesisVoice[]> {
 // Microsoft Edge neural voices (marked "Natural") are the best available in browsers.
 // Falls back progressively to decent system voices.
 const VOICE_PRIORITY = [
-  // Edge / Windows neural voices (most human-like)
-  "Microsoft Aria Online (Natural)",
-  "Microsoft Jenny Online (Natural)",
-  "Microsoft Michelle Online (Natural)",
-  "Microsoft Ana Online (Natural)",
-  "Microsoft Sara Online (Natural)",
-  "Microsoft Aria",
-  "Microsoft Jenny",
+  // Edge / Windows neural male voices (most human-like)
+  "Microsoft Andrew Online (Natural)",
+  "Microsoft Brian Online (Natural)",
+  "Microsoft Christopher Online (Natural)",
+  "Microsoft Eric Online (Natural)",
+  "Microsoft Guy Online (Natural)",
+  "Microsoft Roger Online (Natural)",
+  "Microsoft Steffan Online (Natural)",
+  "Microsoft Davis Online (Natural)",
+  "Microsoft Andrew",
+  "Microsoft Guy",
   // Chrome on Windows
   "Google US English",
-  "Google UK English Female",
-  // macOS / iOS
-  "Samantha",
-  "Karen",
-  "Moira",
-  "Tessa",
+  "Google UK English Male",
+  // macOS / iOS male
+  "Daniel",
+  "Alex",
+  "Tom",
+  "Fred",
   // Older Windows fallback
-  "Microsoft Zira Desktop",
-  "Zira",
+  "Microsoft David Desktop",
+  "David",
 ];
 
 function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
@@ -73,8 +76,12 @@ function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null 
     const match = voices.find(v => v.name.includes(name) && v.lang.startsWith("en"));
     if (match) return match;
   }
-  // Last resort: any English female voice
-  return voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("female")) ?? null;
+  // Last resort: any English male voice, then any English voice
+  return (
+    voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("male")) ??
+    voices.find(v => v.lang.startsWith("en")) ??
+    null
+  );
 }
 
 export function useSpeech(): UseSpeechReturn {
@@ -95,7 +102,21 @@ export function useSpeech(): UseSpeechReturn {
     setIsSpeaking(false);
   }, []);
 
-  // Speaks one string, returns Promise that resolves when utterance ends
+  // Normalize text so TTS pronounces abbreviations and acronyms correctly
+function normalizeForTTS(text: string): string {
+  return text
+    .replace(/Kaarani/g, "Kaa-Rah-Ni")
+    .replace(/Power BI/g, "Power B.I.")
+    .replace(/\bBI\b/g, "B.I.")
+    .replace(/\bSQL\b/g, "S.Q.L.")
+    .replace(/\bAPI\b/g, "A.P.I.")
+    .replace(/\bKPI\b/g, "K.P.I.")
+    .replace(/\bDAX\b/g, "D.A.X.")
+    .replace(/\bETL\b/g, "E.T.L.")
+    .replace(/\bRLS\b/g, "R.L.S.");
+}
+
+// Speaks one string, returns Promise that resolves when utterance ends
   const speakOne = useCallback((text: string): Promise<void> => {
     return new Promise(async resolve => {
       if (
@@ -109,7 +130,7 @@ export function useSpeech(): UseSpeechReturn {
       const voices = await loadVoices();
       if (cancelledRef.current) { resolve(); return; }
 
-      const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(normalizeForTTS(text));
       utterance.rate = 1.0;   // natural pace — neural voices already have good rhythm
       utterance.pitch = 1.0;  // flat pitch — neural voices handle expressiveness themselves
       utterance.volume = 1.0;

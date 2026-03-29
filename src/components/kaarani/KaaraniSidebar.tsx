@@ -25,75 +25,75 @@ export function KaaraniSidebar({ text, hint }: KaaraniSidebarProps) {
   };
 
   return (
-    <div className="flex flex-col gap-5 h-full">
+    <div className="flex flex-col h-full">
 
-      {/* Avatar + status */}
-      <div className="flex items-center gap-3 pb-4 border-b" style={{ borderColor: "#F3F4F6" }}>
+      {/* Large avatar — fills sidebar width */}
+      <div className="relative w-full rounded-xl overflow-hidden mb-3" style={{ backgroundColor: "#EFF6FF" }}>
         <KaaraniAvatar
-          size={44}
+          size={240}
           emotion={isSpeaking ? "talking" : "idle"}
+          className="w-full h-auto"
         />
-        <div className="flex-1">
-          <p className="text-sm font-semibold" style={{ color: "#111827" }}>Kaarani</p>
-          <p className="text-xs" style={{ color: "#9CA3AF" }}>
-            {isSpeaking ? "Speaking…" : "Your guide"}
-          </p>
-        </div>
-        {/* Voice wave bars */}
-        {isSupported && voiceEnabled && (
-          <div className="flex items-end gap-0.5" style={{ height: "18px" }}>
+        {/* Speaking indicator badge */}
+        {isSpeaking && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-end gap-0.5 px-2 py-1 rounded-full"
+            style={{ backgroundColor: "rgba(37,99,235,0.85)" }}>
             {[0, 1, 2, 3, 4].map(i => (
-              <span
-                key={i}
-                className={isSpeaking ? "wave-bar" : ""}
-                style={{
-                  display: "block",
-                  width: "3px",
-                  height: isSpeaking ? "100%" : "35%",
-                  backgroundColor: isSpeaking ? "#2563EB" : "#D1D5DB",
-                  borderRadius: "2px",
-                  transition: "background-color 0.3s, height 0.3s",
-                  animationDelay: `${i * 0.1}s`,
-                }}
-              />
+              <span key={i} className="wave-bar" style={{
+                display: "block", width: "3px", height: "14px",
+                backgroundColor: "#fff", borderRadius: "2px",
+                animationDelay: `${i * 0.1}s`,
+              }} />
             ))}
           </div>
         )}
       </div>
 
-      {/* Narration text */}
-      <p className="text-sm leading-7 flex-1" style={{ color: "#374151" }}>{text}</p>
+      {/* Name + status */}
+      <div className="flex items-center justify-between mb-4 px-1">
+        <div>
+          <p className="text-sm font-semibold" style={{ color: "#111827" }}>Kaarani</p>
+          <p className="text-xs" style={{ color: "#9CA3AF" }}>
+            {isSpeaking ? "Speaking…" : "Your guide"}
+          </p>
+        </div>
+        {isSupported && (
+          <button type="button"
+            onClick={() => { if (voiceEnabled) stop(); setVoiceEnabled(!voiceEnabled); }}
+            className="py-1 px-2.5 text-xs font-medium rounded-lg border transition-colors"
+            style={{ borderColor: "#E5E7EB", color: voiceEnabled ? "#6B7280" : "#2563EB", backgroundColor: "#FFFFFF" }}>
+            {voiceEnabled ? "Mute" : "Unmute"}
+          </button>
+        )}
+      </div>
+
+      {/* Narration text — scrollable middle */}
+      <p className="text-sm leading-7 flex-1 overflow-y-auto px-1" style={{ color: "#374151" }}>{text}</p>
 
       {/* Hint */}
       {hint && (
-        <div className="rounded-lg p-4 text-sm leading-relaxed" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
-          <p className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: "#9CA3AF" }}>Tip</p>
+        <div className="rounded-lg p-3 text-sm leading-relaxed mt-3" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "#9CA3AF" }}>Tip</p>
           <p style={{ color: "#374151" }}>{hint}</p>
         </div>
       )}
 
-      {/* Voice controls */}
+      {/* Replay */}
       {isSupported && (
-        <div className="flex items-center gap-2 pt-4 border-t" style={{ borderColor: "#F3F4F6" }}>
+        <div className="pt-3 mt-3 border-t" style={{ borderColor: "#F3F4F6" }}>
           {!voiceUnlocked ? (
             <button type="button" onClick={handleReplay}
-              className="flex-1 py-2 text-xs font-semibold rounded-lg border transition-colors"
+              className="w-full py-2 text-xs font-semibold rounded-lg border transition-colors"
               style={{ borderColor: "#2563EB", color: "#2563EB", backgroundColor: "#EFF6FF" }}>
               Tap to hear Kaarani
             </button>
           ) : (
             <button type="button" onClick={handleReplay} disabled={isSpeaking}
-              className="flex-1 py-2 text-xs font-medium rounded-lg border transition-colors disabled:opacity-40"
+              className="w-full py-2 text-xs font-medium rounded-lg border transition-colors disabled:opacity-40"
               style={{ borderColor: "#E5E7EB", color: "#6B7280", backgroundColor: "#FFFFFF" }}>
               Replay
             </button>
           )}
-          <button type="button"
-            onClick={() => { if (voiceEnabled) stop(); setVoiceEnabled(!voiceEnabled); }}
-            className="py-2 px-3 text-xs font-medium rounded-lg border transition-colors"
-            style={{ borderColor: "#E5E7EB", color: voiceEnabled ? "#6B7280" : "#2563EB", backgroundColor: "#FFFFFF" }}>
-            {voiceEnabled ? "Mute" : "Unmute"}
-          </button>
         </div>
       )}
     </div>
