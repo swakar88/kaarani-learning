@@ -3,6 +3,7 @@
 import React from "react";
 import { ProgressDots } from "./ProgressDots";
 import { KaaraniSidebar } from "@/components/kaarani/KaaraniSidebar";
+import { KaaraniEmotion } from "@/components/kaarani/KaaraniAvatar";
 import { MODULES } from "@/data/modules";
 import { useKaarani } from "@/context/KaaraniContext";
 
@@ -19,6 +20,7 @@ interface ModuleLayoutProps {
   totalScreens: number;
   kaaraniText: string;
   kaaraniHint?: string;
+  kaaraniEmotion?: KaaraniEmotion;
   primaryAction: PrimaryAction;
   onPrev?: () => void;
   children: React.ReactNode;
@@ -30,6 +32,7 @@ export function ModuleLayout({
   totalScreens,
   kaaraniText,
   kaaraniHint,
+  kaaraniEmotion,
   primaryAction,
   onPrev,
   children,
@@ -67,6 +70,7 @@ export function ModuleLayout({
           <KaaraniSidebar
             text={kaaraniText}
             hint={kaaraniHint}
+            emotion={kaaraniEmotion}
           />
         </aside>
       </main>

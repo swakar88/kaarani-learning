@@ -3,14 +3,15 @@
 import React, { useEffect } from "react";
 import { useSpeechContext } from "@/context/SpeechContext";
 import { useKaarani } from "@/context/KaaraniContext";
-import { KaaraniAvatar } from "./KaaraniAvatar";
+import { KaaraniAvatar, KaaraniEmotion } from "./KaaraniAvatar";
 
 interface KaaraniSidebarProps {
   text: string;
   hint?: string;
+  emotion?: KaaraniEmotion;
 }
 
-export function KaaraniSidebar({ text, hint }: KaaraniSidebarProps) {
+export function KaaraniSidebar({ text, hint, emotion }: KaaraniSidebarProps) {
   const { voiceEnabled, setVoiceEnabled, voiceUnlocked, unlockVoice } = useKaarani();
   const { speak, stop, isSpeaking, isSupported } = useSpeechContext();
 
@@ -31,7 +32,7 @@ export function KaaraniSidebar({ text, hint }: KaaraniSidebarProps) {
       <div className="relative w-full rounded-xl overflow-hidden mb-3" style={{ backgroundColor: "#EFF6FF" }}>
         <KaaraniAvatar
           size={240}
-          emotion={isSpeaking ? "talking" : "idle"}
+          emotion={isSpeaking ? "talking" : (emotion ?? "idle")}
           className="w-full h-auto"
         />
         {/* Speaking indicator badge */}

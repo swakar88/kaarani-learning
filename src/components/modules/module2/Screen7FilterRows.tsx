@@ -97,8 +97,21 @@ export default function Screen7FilterRows({ onNext, onPrev, screenIndex, totalSc
           </div>
         </div>
 
-        {/* Block 3 — PowerBI Callout */}
+        {/* Block 3 — PQ filter vs Slicer comparison + callout */}
         <div className={`${blockClass(3)} mb-4`}>
+          <div className="rounded-2xl p-4 mb-3" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}>
+            <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: M_COLOR }}>Power Query filter vs Report slicer — not the same thing</p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl p-3" style={{ backgroundColor: "#FEF2F2", border: "1.5px solid #FECACA" }}>
+                <p className="text-xs font-black mb-1" style={{ color: "#991B1B" }}>Power Query filter</p>
+                <p className="text-xs leading-snug" style={{ color: "#7F1D1D" }}>Permanently removes rows before data loads. The user never sees those rows — even in a slicer. Use for rows you never want in the report at all.</p>
+              </div>
+              <div className="rounded-xl p-3" style={{ backgroundColor: "#F0FDF4", border: "1.5px solid #BBF7D0" }}>
+                <p className="text-xs font-black mb-1" style={{ color: "#166534" }}>Report slicer</p>
+                <p className="text-xs leading-snug" style={{ color: "#14532D" }}>Hides rows visually. The data is still there — the user can toggle the filter on or off. Use when users need to explore different subsets.</p>
+              </div>
+            </div>
+          </div>
           <PowerBICallout title="Filter rows in Power Query via…"
             items={["Column header dropdown → filter", "Home → Remove Rows → Remove Blank Rows", "Add Column → Custom with if condition", "Table.SelectRows() in formula bar"]} />
         </div>

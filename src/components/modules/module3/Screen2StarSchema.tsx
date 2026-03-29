@@ -7,11 +7,54 @@ import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { getFlavorStarSchema } from "@/data/module3";
 import { ScreenHeader } from "@/components/ui/ScreenSection";
-import { Placeholder } from "@/components/ui/Placeholder";
 import { useBlockReveal } from "@/hooks/useBlockReveal";
 import { useSpeechContext } from "@/context/SpeechContext";
 
 const M_COLOR = "#2563EB";
+
+function StarDiagram({ factTable, dimensions }: { factTable: string; dimensions: string[] }) {
+  const cx = 160;
+  const cy = 130;
+  const r = 52;
+  const dimR = 42;
+  const angleStep = (2 * Math.PI) / dimensions.length;
+  const radius = 108;
+
+  const dimPositions = dimensions.map((_, i) => {
+    const angle = -Math.PI / 2 + i * angleStep;
+    return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+  });
+
+  return (
+    <svg viewBox="0 0 320 260" className="w-full" style={{ maxHeight: 220 }}>
+      {/* Lines from fact to each dim */}
+      {dimPositions.map((pos, i) => (
+        <line key={i} x1={cx} y1={cy} x2={pos.x} y2={pos.y}
+          stroke="#BFDBFE" strokeWidth="2" strokeDasharray="5 3" />
+      ))}
+      {/* Fact table circle */}
+      <circle cx={cx} cy={cy} r={r} fill="#2563EB" />
+      <foreignObject x={cx - r} y={cy - r} width={r * 2} height={r * 2}>
+        <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <span style={{ color: "#fff", fontSize: 8, fontWeight: 900, textTransform: "uppercase", letterSpacing: 1, textAlign: "center" }}>FACT</span>
+          <span style={{ color: "#fff", fontSize: 9, fontWeight: 700, textAlign: "center", padding: "0 4px", lineHeight: 1.2 }}>{factTable.replace("fact_", "")}</span>
+        </div>
+      </foreignObject>
+      {/* Dimension circles */}
+      {dimPositions.map((pos, i) => (
+        <g key={i}>
+          <circle cx={pos.x} cy={pos.y} r={dimR} fill="#EFF6FF" stroke="#BFDBFE" strokeWidth="1.5" />
+          <foreignObject x={pos.x - dimR} y={pos.y - dimR} width={dimR * 2} height={dimR * 2}>
+            <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: "#1E40AF", fontSize: 7, fontWeight: 900, textTransform: "uppercase", letterSpacing: 0.5, textAlign: "center" }}>DIM</span>
+              <span style={{ color: "#1E40AF", fontSize: 8.5, fontWeight: 700, textAlign: "center", padding: "0 3px", lineHeight: 1.2 }}>{dimensions[i].replace("dim_", "")}</span>
+            </div>
+          </foreignObject>
+        </g>
+      ))}
+    </svg>
+  );
+}
 
 export default function Screen2StarSchema({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
   const { selectedFlavor, unlockVoice } = useKaarani();
@@ -34,7 +77,7 @@ export default function Screen2StarSchema({ onNext, onPrev, screenIndex, totalSc
   return (
     <ModuleLayout moduleId={3} screenIndex={screenIndex} totalScreens={totalScreens}
       kaaraniText="The star schema is the gold standard for Power BI models. One fat table in the middle — your Fact table — stores all the numbers. Smaller Dimension tables around it store the descriptive context. The fact table links to each dimension via a key column — like player_id or date_key."
-      kaaraniHint="Always aim for a star schema. Avoid snowflaking (dimension tables linking to other dimensions). Power BI performs best with a flat star."
+      kaaraniHint="Always aim for a star schema. Avoid snowflaking — that's when dimension tables link to other dimension tables instead of directly to the fact table. It makes queries slower and harder to manage."
       onPrev={onPrev}
       primaryAction={{ label: "Create relationships →", onClick: onNext, disabled: !isComplete }}
     >
@@ -98,9 +141,17 @@ export default function Screen2StarSchema({ onNext, onPrev, screenIndex, totalSc
           )}
         </div>
 
-        {/* Block 3 — diagram */}
+        {/* Block 3 — Star schema SVG diagram */}
         <div className={`${blockClass(3)} mb-4`}>
-          <Placeholder type="diagram" label={`[Diagram: ${flavor.label} star schema — ${schema.factTable} at centre, ${schema.dimensions.length} dimension tables as star points]`} height="120px" />
+          <div className="rounded-2xl p-4" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
+            <p className="text-xs font-bold uppercase tracking-wider mb-3 text-center" style={{ color: M_COLOR }}>
+              {flavor.label} — Star Schema layout
+            </p>
+            <StarDiagram factTable={schema.factTable} dimensions={schema.dimensions.map(d => d.name)} />
+            <p className="text-xs text-center mt-3" style={{ color: "#9CA3AF" }}>
+              Every dimension connects to the fact table — never to each other
+            </p>
+          </div>
         </div>
 
         {/* Tap to reveal */}

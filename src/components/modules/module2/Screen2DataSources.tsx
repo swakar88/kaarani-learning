@@ -98,11 +98,21 @@ export default function Screen2DataSources({ onNext, onPrev, screenIndex, totalS
 
         {/* Block 3 — In Power BI Desktop instructions */}
         <div className={`${blockClass(3)} mb-4`}>
-          <div className="rounded-2xl p-4" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E8E8E8" }}>
+          <div className="rounded-2xl p-4 mb-3" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E8E8E8" }}>
             <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: M_COLOR }}>In Power BI Desktop</p>
-            <p className="text-sm" style={{ color: "#111827" }}>
-              Click <strong>Home → Get Data → Text/CSV</strong> (or your file type) → browse to your file → click <strong>Load</strong> or <strong>Transform Data</strong> to open Power Query first.
+            <p className="text-sm mb-3" style={{ color: "#111827" }}>
+              Click <strong>Home → Get Data → Text/CSV</strong> (or your file type) → browse to your file → you'll see two buttons:
             </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl p-3" style={{ backgroundColor: "#FFFBEB", border: "1.5px solid #FDE68A" }}>
+                <p className="text-xs font-black mb-1" style={{ color: "#92400E" }}>Load</p>
+                <p className="text-xs leading-snug" style={{ color: "#78350F" }}>Skips cleaning — loads data straight into the model. Only use this if your data is already perfect.</p>
+              </div>
+              <div className="rounded-xl p-3" style={{ backgroundColor: "#EFF6FF", border: "1.5px solid #BFDBFE" }}>
+                <p className="text-xs font-black mb-1" style={{ color: "#1E40AF" }}>Transform Data ✓</p>
+                <p className="text-xs leading-snug" style={{ color: "#1E40AF" }}>Opens Power Query so you can clean first, then load. <strong>Always use this for real data.</strong></p>
+              </div>
+            </div>
           </div>
         </div>
 

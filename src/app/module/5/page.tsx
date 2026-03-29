@@ -13,9 +13,10 @@ import Screen6 from "@/components/modules/module5/Screen6ScheduledRefresh";
 import Screen7 from "@/components/modules/module5/Screen7Sharing";
 import Screen8 from "@/components/modules/module5/Screen8MobileLayout";
 import Screen9 from "@/components/modules/module5/Screen9FabricIntro";
-import Screen10 from "@/components/modules/module5/Screen10CourseComplete";
+import Screen10 from "@/components/modules/module5/Screen10KnowledgeCheck";
+import Screen11 from "@/components/modules/module5/Screen10CourseComplete";
 
-const TOTAL = 10;
+const TOTAL = 11;
 
 export default function Module5Page() {
   const [screen, setScreen] = useState(0);
@@ -43,6 +44,7 @@ export default function Module5Page() {
     case 7: return <Screen8 {...p} />;
     case 8: return <Screen9 {...p} />;
     case 9: return <Screen10 {...p} />;
+    case 10: return <Screen11 {...p} />;
     default: return <Screen1 {...p} />;
   }
 }

@@ -15,9 +15,10 @@ import Screen8 from "@/components/modules/module3/Screen8FilterContext";
 import Screen9 from "@/components/modules/module3/Screen9TimeIntelligence";
 import Screen10 from "@/components/modules/module3/Screen10Variables";
 import Screen11 from "@/components/modules/module3/Screen11BestPractices";
-import Screen12 from "@/components/modules/module3/Screen12Complete";
+import Screen12 from "@/components/modules/module3/Screen12KnowledgeCheck";
+import Screen13 from "@/components/modules/module3/Screen12Complete";
 
-const TOTAL = 12;
+const TOTAL = 13;
 
 export default function Module3Page() {
   const [screen, setScreen] = useState(0);
@@ -47,6 +48,7 @@ export default function Module3Page() {
     case 9: return <Screen10 {...p} />;
     case 10: return <Screen11 {...p} />;
     case 11: return <Screen12 {...p} />;
+    case 12: return <Screen13 {...p} />;
     default: return <Screen1 {...p} />;
   }
 }

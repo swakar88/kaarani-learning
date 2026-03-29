@@ -36,7 +36,7 @@ export const MODULES: ModuleInfo[] = [
     subtitle: "Real data, real mess",
     description:
       "Connect to open datasets, fix messy data in Power Query, and shape it for analysis.",
-    screenCount: 10,
+    screenCount: 11,
     color: "#8B5CF6",
     icon: "",
     topics: [
@@ -54,7 +54,7 @@ export const MODULES: ModuleInfo[] = [
     subtitle: "Ask questions in plain English",
     description:
       "Build a star schema, set up relationships, and write DAX like plain English questions.",
-    screenCount: 12,
+    screenCount: 13,
     color: "#10B981",
     icon: "⭐",
     topics: [
@@ -72,7 +72,7 @@ export const MODULES: ModuleInfo[] = [
     subtitle: "Every chart, every insight",
     description:
       "Build every chart type, add slicers, conditional formatting, forecasting and AI visuals.",
-    screenCount: 15,
+    screenCount: 16,
     color: "#F59E0B",
     icon: "",
     topics: [
@@ -90,7 +90,7 @@ export const MODULES: ModuleInfo[] = [
     subtitle: "Publish, protect, automate",
     description:
       "Publish to the web, manage workspaces, set Row-Level Security, and schedule refreshes.",
-    screenCount: 10,
+    screenCount: 11,
     color: "#EF4444",
     icon: "",
     topics: [

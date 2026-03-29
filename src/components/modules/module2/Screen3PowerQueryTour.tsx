@@ -4,7 +4,6 @@ import { useState } from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
-import { Placeholder } from "@/components/ui/Placeholder";
 import { ScreenHeader } from "@/components/ui/ScreenSection";
 import { useBlockReveal } from "@/hooks/useBlockReveal";
 import { useSpeechContext } from "@/context/SpeechContext";
@@ -59,12 +58,72 @@ export default function Screen3PowerQueryTour({ onNext, onPrev, screenIndex, tot
             subtitle="Tap each zone to learn what it does." moduleColor={M_COLOR} />
         </div>
 
-        {/* Block 1 — Screenshot placeholder */}
+        {/* Block 1 — PQ Editor layout mock */}
         <div className={`${blockClass(1)} mb-5`}>
-          <div className="relative">
-            <Placeholder type="image" label="[Power BI Screenshot: Power Query Editor — to be replaced with annotated screenshot]" height="220px" />
-            <p className="text-xs text-center mt-2" style={{ color: "#6B7280" }}>← The real Power Query Editor will be embedded here</p>
+          <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #E5E7EB", backgroundColor: "#F3F4F6" }}>
+            {/* Title bar */}
+            <div className="px-3 py-1.5 flex items-center gap-2" style={{ backgroundColor: "#1F2937" }}>
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#EF4444" }} />
+                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#F59E0B" }} />
+                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#10B981" }} />
+              </div>
+              <span className="text-xs font-medium" style={{ color: "#D1D5DB" }}>Power Query Editor</span>
+            </div>
+            {/* Ribbon */}
+            <div className="px-3 py-2 flex items-center gap-3 border-b" style={{ backgroundColor: "#DBEAFE", borderColor: "#BFDBFE" }}>
+              <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: "#1E40AF" }}>① Ribbon</span>
+              <div className="flex gap-2">
+                {["Home", "Transform", "Add Column", "View"].map(t => (
+                  <span key={t} className="text-[9px] px-2 py-0.5 rounded font-medium" style={{ backgroundColor: "#EFF6FF", color: "#2563EB" }}>{t}</span>
+                ))}
+              </div>
+              <span className="text-[9px] ml-auto" style={{ color: "#3B82F6" }}>All actions live here</span>
+            </div>
+            {/* Main area */}
+            <div className="flex" style={{ height: 130 }}>
+              {/* Queries pane */}
+              <div className="flex flex-col p-2 border-r" style={{ width: "22%", backgroundColor: "#F9FAFB", borderColor: "#E5E7EB" }}>
+                <span className="text-[9px] font-black uppercase tracking-wider mb-2" style={{ color: "#1E40AF" }}>② Queries</span>
+                {["Sales", "Products", "Dates"].map(q => (
+                  <div key={q} className="text-[9px] px-2 py-1 rounded mb-1" style={{ backgroundColor: q === "Sales" ? "#DBEAFE" : "#FFFFFF", color: "#374151", border: "1px solid #E5E7EB" }}>{q}</div>
+                ))}
+              </div>
+              {/* Data preview */}
+              <div className="flex-1 p-2" style={{ backgroundColor: "#FFFFFF" }}>
+                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "#1E40AF" }}>③ Data Preview</span>
+                <div className="mt-1 overflow-hidden rounded" style={{ border: "1px solid #E5E7EB" }}>
+                  <div className="flex" style={{ backgroundColor: "#F3F4F6" }}>
+                    {["ID", "Date", "Amount", "Status"].map(h => (
+                      <div key={h} className="flex-1 text-[8px] px-1.5 py-1 font-semibold border-r" style={{ color: "#6B7280", borderColor: "#E5E7EB" }}>{h}</div>
+                    ))}
+                  </div>
+                  {[[1, "Jan 3", "₹499", "Active"], [2, "Jan 4", "null", "Active"], [3, "Jan 4", "₹899", "Active"]].map((row, i) => (
+                    <div key={i} className="flex border-t" style={{ borderColor: "#F3F4F6" }}>
+                      {row.map((cell, j) => (
+                        <div key={j} className="flex-1 text-[8px] px-1.5 py-1 border-r font-mono" style={{ color: String(cell) === "null" ? "#EF4444" : "#374151", borderColor: "#F3F4F6" }}>{cell}</div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Applied steps */}
+              <div className="flex flex-col p-2 border-l" style={{ width: "24%", backgroundColor: "#F9FAFB", borderColor: "#E5E7EB" }}>
+                <span className="text-[9px] font-black uppercase tracking-wider mb-2" style={{ color: "#1E40AF" }}>④ Applied Steps</span>
+                {["Source", "Changed Type", "Removed Nulls"].map((s, i) => (
+                  <div key={s} className="text-[8px] px-2 py-1 rounded mb-1 flex items-center gap-1" style={{ backgroundColor: "#FFFFFF", color: "#374151", border: "1px solid #E5E7EB" }}>
+                    <span style={{ color: "#2563EB" }}>▸</span> {s}
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Formula bar */}
+            <div className="px-3 py-1.5 flex items-center gap-2 border-t" style={{ backgroundColor: "#F9FAFB", borderColor: "#E5E7EB" }}>
+              <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "#1E40AF" }}>⑤ Formula Bar</span>
+              <span className="text-[8px] font-mono flex-1 px-2 py-0.5 rounded" style={{ backgroundColor: "#FFFFFF", color: "#6B7280", border: "1px solid #E5E7EB" }}>= Table.RemoveRowsWithErrors(#"Changed Type")</span>
+            </div>
           </div>
+          <p className="text-xs text-center mt-2" style={{ color: "#9CA3AF" }}>Real annotated screenshot coming — tap each zone below to learn what it does</p>
         </div>
 
         {/* Block 2 — Zone buttons and detail */}

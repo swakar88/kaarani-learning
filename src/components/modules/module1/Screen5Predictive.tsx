@@ -13,7 +13,7 @@ const KAARANI_TEXT =
   "Predictive analytics uses past patterns to forecast the future. It doesn't tell you what will definitely happen — it tells you what's likely to happen, and with what confidence. Power BI has built-in forecasting you can add in one click.";
 
 const KAARANI_HINT =
-  "Power BI's forecasting uses exponential smoothing. For more advanced ML predictions, Power BI connects to Azure ML and Python.";
+  "Power BI's built-in forecast looks at your historical trend and projects it forward — automatically. For more advanced predictions, it connects to Azure ML and Python scripts.";
 
 // Simple CSS-based forecast chart component
 function ForecastChart({ flavorLabel }: { flavorLabel: string }) {
@@ -186,16 +186,24 @@ export default function Screen5Predictive({
             style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}
           >
             <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "#2563EB" }}>
-               In Power BI, predictive analytics uses…
+               How to add a forecast in Power BI
             </p>
-            <div className="flex flex-wrap gap-2">
+            <ol className="flex flex-col gap-2 mb-3">
               {[
-                "Forecast line on line chart",
-                "Analytics pane",
-                "Azure ML integration",
-                "Python/R scripts",
-                "Key Influencers visual",
-              ].map((item) => (
+                "Add a Line chart to your report canvas",
+                "Click the chart to select it",
+                "In the Visualisations pane → click the Analytics tab (the magnifying glass icon)",
+                "Expand Forecast → click Add",
+                "Set forecast length, confidence interval, and seasonality",
+              ].map((s, i) => (
+                <li key={i} className="flex gap-2 text-xs" style={{ color: "#374151" }}>
+                  <span className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-black text-white" style={{ backgroundColor: "#2563EB" }}>{i + 1}</span>
+                  {s}
+                </li>
+              ))}
+            </ol>
+            <div className="flex flex-wrap gap-2 border-t pt-3" style={{ borderColor: "#E5E7EB" }}>
+              {["Key Influencers visual", "Azure ML integration", "Python/R scripts"].map((item) => (
                 <span key={item} className="text-xs px-3 py-1 rounded-full font-medium"
                   style={{ backgroundColor: "#FFFFFF", color: "#2563EB", border: "1px solid #E5E7EB" }}>
                   {item}

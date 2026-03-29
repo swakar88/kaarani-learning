@@ -18,9 +18,10 @@ import Screen11 from "@/components/modules/module4/Screen11Forecasting";
 import Screen12 from "@/components/modules/module4/Screen12AIVisuals";
 import Screen13 from "@/components/modules/module4/Screen13DesignPrinciples";
 import Screen14 from "@/components/modules/module4/Screen14OtherCharts";
-import Screen15 from "@/components/modules/module4/Screen15Complete";
+import Screen15 from "@/components/modules/module4/Screen15KnowledgeCheck";
+import Screen16 from "@/components/modules/module4/Screen15Complete";
 
-const TOTAL = 15;
+const TOTAL = 16;
 
 export default function Module4Page() {
   const [screen, setScreen] = useState(0);
@@ -53,6 +54,7 @@ export default function Module4Page() {
     case 12: return <Screen13 {...p} />;
     case 13: return <Screen14 {...p} />;
     case 14: return <Screen15 {...p} />;
+    case 15: return <Screen16 {...p} />;
     default: return <Screen1 {...p} />;
   }
 }

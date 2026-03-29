@@ -13,9 +13,10 @@ import Screen6 from "@/components/modules/module2/Screen6TransformColumns";
 import Screen7 from "@/components/modules/module2/Screen7FilterRows";
 import Screen8 from "@/components/modules/module2/Screen8MergeAppend";
 import Screen9 from "@/components/modules/module2/Screen9LoadModel";
-import Screen10 from "@/components/modules/module2/Screen10Complete";
+import Screen10 from "@/components/modules/module2/Screen10KnowledgeCheck";
+import Screen11 from "@/components/modules/module2/Screen10Complete";
 
-const TOTAL = 10;
+const TOTAL = 11;
 
 export default function Module2Page() {
   const [screen, setScreen] = useState(0);
@@ -43,6 +44,7 @@ export default function Module2Page() {
     case 7: return <Screen8 {...p} />;
     case 8: return <Screen9 {...p} />;
     case 9: return <Screen10 {...p} />;
+    case 10: return <Screen11 {...p} />;
     default: return <Screen1 {...p} />;
   }
 }
