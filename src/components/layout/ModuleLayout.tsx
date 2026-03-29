@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { ProgressDots } from "./ProgressDots";
+import { CourseNav } from "./CourseNav";
 import { KaaraniSidebar } from "@/components/kaarani/KaaraniSidebar";
 import { KaaraniEmotion } from "@/components/kaarani/KaaraniAvatar";
 import { MODULES } from "@/data/modules";
+import { MODULE_SCREENS } from "@/data/screens";
 import { useKaarani } from "@/context/KaaraniContext";
 
 interface PrimaryAction {
@@ -37,8 +40,22 @@ export function ModuleLayout({
   onPrev,
   children,
 }: ModuleLayoutProps) {
+  const router = useRouter();
   const module = MODULES[moduleId] ?? MODULES[0];
-  const { unlockVoice } = useKaarani();
+  const { unlockVoice, completedModules, currentScreen, setCurrentScreen, setCurrentModule } = useKaarani();
+
+  // Count completed screens for nav header
+  const completedScreensCount = completedModules.reduce((sum, mid) => {
+    return sum + (MODULE_SCREENS[mid]?.length ?? 0);
+  }, 0) + currentScreen;
+
+  const handleNavigate = (targetModuleId: number, targetScreen: number) => {
+    setCurrentScreen(targetScreen);
+    if (targetModuleId !== moduleId) {
+      setCurrentModule(targetModuleId);
+      router.push(`/module/${targetModuleId}`);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: "#F8FAFC" }}>
@@ -63,6 +80,13 @@ export function ModuleLayout({
 
       {/* Main */}
       <main className="flex flex-1 overflow-hidden">
+        <CourseNav
+          currentModuleId={moduleId}
+          currentScreen={screenIndex}
+          completedModules={completedModules}
+          completedScreensCount={completedScreensCount}
+          onNavigate={handleNavigate}
+        />
         <section className="flex-1 overflow-y-auto px-8 py-10 animate-fade-in-up">
           {children}
         </section>

@@ -6,8 +6,8 @@ import Image from "next/image";
 export type KaaraniEmotion = "idle" | "talking" | "happy" | "thinking";
 
 const EMOTION_VIDEO: Record<Exclude<KaaraniEmotion, "idle">, string> = {
-  talking:  "/avatar/nodding.mp4",
-  happy:    "/avatar/nodding.mp4",
+  talking:  "/avatar/Animated_Tutor_Character_Explaining.mp4",
+  happy:    "/avatar/Animated_Tutor_Character_Thumbs_Up.mp4",
   thinking: "/avatar/thinking.mp4",
 };
 

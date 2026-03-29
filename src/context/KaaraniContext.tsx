@@ -28,6 +28,7 @@ export function KaaraniProvider({ children }: { children: React.ReactNode }) {
   const [voiceUnlocked, setVoiceUnlocked] = useState<boolean>(false);
   const [completedModules, setCompletedModules] = useState<number[]>([]);
   const [currentModule, setCurrentModuleState] = useState<number>(0);
+  const [currentScreen, setCurrentScreenState] = useState<number>(0);
   const [hydrated, setHydrated] = useState(false);
 
   // Load persisted state on mount
@@ -88,6 +89,10 @@ export function KaaraniProvider({ children }: { children: React.ReactNode }) {
     setCurrentModuleState(id);
   }, []);
 
+  const setCurrentScreen = useCallback((s: number) => {
+    setCurrentScreenState(s);
+  }, []);
+
   const value: KaaraniState = {
     selectedFlavor,
     setSelectedFlavor,
@@ -99,6 +104,8 @@ export function KaaraniProvider({ children }: { children: React.ReactNode }) {
     markModuleComplete,
     currentModule,
     setCurrentModule,
+    currentScreen,
+    setCurrentScreen,
   };
 
   return (

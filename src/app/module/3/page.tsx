@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useKaarani } from "@/context/KaaraniContext";
 
@@ -21,16 +21,15 @@ import Screen13 from "@/components/modules/module3/Screen12Complete";
 const TOTAL = 13;
 
 export default function Module3Page() {
-  const [screen, setScreen] = useState(0);
   const router = useRouter();
-  const { markModuleComplete, setCurrentModule } = useKaarani();
+  const { markModuleComplete, setCurrentModule, currentScreen: screen, setCurrentScreen: setScreen } = useKaarani();
 
   const next = () => {
-    if (screen < TOTAL - 1) setScreen(s => s + 1);
-    else { markModuleComplete(3); setCurrentModule(4); router.push("/module/4"); }
+    if (screen < TOTAL - 1) setScreen(screen + 1);
+    else { markModuleComplete(3); setCurrentModule(4); setScreen(0); router.push("/module/4"); }
   };
   const prev = () => {
-    if (screen > 0) setScreen(s => s - 1);
+    if (screen > 0) setScreen(screen - 1);
     else router.push("/module/2");
   };
 

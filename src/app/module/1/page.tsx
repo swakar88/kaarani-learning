@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useKaarani } from "@/context/KaaraniContext";
 
@@ -13,47 +13,31 @@ import Screen6 from "@/components/modules/module1/Screen6Prescriptive";
 import Screen7 from "@/components/modules/module1/Screen7DataRoles";
 import Screen8 from "@/components/modules/module1/Screen8PowerBIFit";
 
-const TOTAL_SCREENS = 8;
+const TOTAL = 8;
 
 export default function Module1Page() {
-  const [currentScreen, setCurrentScreen] = useState(0);
   const router = useRouter();
-  const { markModuleComplete, setCurrentModule } = useKaarani();
+  const { markModuleComplete, setCurrentModule, currentScreen, setCurrentScreen } = useKaarani();
 
-  const handleNext = () => {
-    if (currentScreen < TOTAL_SCREENS - 1) {
-      setCurrentScreen((s) => s + 1);
-    } else {
-      markModuleComplete(1);
-      setCurrentModule(2);
-      router.push("/module/2");
-    }
+  const next = () => {
+    if (currentScreen < TOTAL - 1) setCurrentScreen(currentScreen + 1);
+    else { markModuleComplete(1); setCurrentModule(2); setCurrentScreen(0); router.push("/module/2"); }
+  };
+  const prev = () => {
+    if (currentScreen > 0) setCurrentScreen(currentScreen - 1);
+    else router.push("/module/0");
   };
 
-  const handlePrev = () => {
-    if (currentScreen > 0) {
-      setCurrentScreen((s) => s - 1);
-    } else {
-      router.push("/module/0");
-    }
-  };
-
-  const commonProps = {
-    onNext: handleNext,
-    onPrev: handlePrev,
-    screenIndex: currentScreen,
-    totalScreens: TOTAL_SCREENS,
-  };
-
+  const p = { onNext: next, onPrev: prev, screenIndex: currentScreen, totalScreens: TOTAL };
   switch (currentScreen) {
-    case 0: return <Screen1 {...commonProps} />;
-    case 1: return <Screen2 {...commonProps} />;
-    case 2: return <Screen3 {...commonProps} />;
-    case 3: return <Screen4 {...commonProps} />;
-    case 4: return <Screen5 {...commonProps} />;
-    case 5: return <Screen6 {...commonProps} />;
-    case 6: return <Screen7 {...commonProps} />;
-    case 7: return <Screen8 {...commonProps} />;
-    default: return <Screen1 {...commonProps} />;
+    case 0: return <Screen1 {...p} />;
+    case 1: return <Screen2 {...p} />;
+    case 2: return <Screen3 {...p} />;
+    case 3: return <Screen4 {...p} />;
+    case 4: return <Screen5 {...p} />;
+    case 5: return <Screen6 {...p} />;
+    case 6: return <Screen7 {...p} />;
+    case 7: return <Screen8 {...p} />;
+    default: return <Screen1 {...p} />;
   }
 }

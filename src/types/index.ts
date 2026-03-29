@@ -70,4 +70,6 @@ export interface KaaraniState {
   markModuleComplete: (id: number) => void;
   currentModule: number;
   setCurrentModule: (id: number) => void;
+  currentScreen: number;
+  setCurrentScreen: (s: number) => void;
 }

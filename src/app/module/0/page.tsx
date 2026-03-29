@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Screen1 from "@/components/modules/module0/Screen1InstallCheck";
 import Screen2 from "@/components/modules/module0/Screen2FlavorSelect";
 import Screen3 from "@/components/modules/module0/Screen3CoursePreview";
@@ -10,25 +10,22 @@ import { useKaarani } from "@/context/KaaraniContext";
 const TOTAL_SCREENS = 3;
 
 export default function Module0Page() {
-  const [currentScreen, setCurrentScreen] = useState(0);
   const router = useRouter();
-  const { markModuleComplete, setCurrentModule } = useKaarani();
+  const { markModuleComplete, setCurrentModule, currentScreen, setCurrentScreen } = useKaarani();
 
   const handleNext = () => {
     if (currentScreen < TOTAL_SCREENS - 1) {
-      setCurrentScreen((s) => s + 1);
+      setCurrentScreen(currentScreen + 1);
     } else {
-      // Module 0 complete — go to Module 1
       markModuleComplete(0);
       setCurrentModule(1);
+      setCurrentScreen(0);
       router.push("/module/1");
     }
   };
 
   const handlePrev = () => {
-    if (currentScreen > 0) {
-      setCurrentScreen((s) => s - 1);
-    }
+    if (currentScreen > 0) setCurrentScreen(currentScreen - 1);
   };
 
   const commonProps = {
@@ -39,13 +36,9 @@ export default function Module0Page() {
   };
 
   switch (currentScreen) {
-    case 0:
-      return <Screen1 {...commonProps} />;
-    case 1:
-      return <Screen2 {...commonProps} />;
-    case 2:
-      return <Screen3 {...commonProps} />;
-    default:
-      return <Screen1 {...commonProps} />;
+    case 0: return <Screen1 {...commonProps} />;
+    case 1: return <Screen2 {...commonProps} />;
+    case 2: return <Screen3 {...commonProps} />;
+    default: return <Screen1 {...commonProps} />;
   }
 }
