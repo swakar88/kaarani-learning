@@ -21,236 +21,169 @@ const DIAGNOSTIC_DATA: Record<string, {
   drillTable: { headers: string[]; rows: (string | number)[][] };
   rootCause: string;
 }> = {
+  baseball: {
+    anomalyLabel: "Aaron Judge's hit rate collapsed over 3 games — something doesn't look right:",
+    anomalyTable: {
+      headers: ["Date", "Player", "Hits", "Home Runs", "Status"],
+      rows: [
+        ["2022-04-07", "Aaron Judge", 5, 1, "Played ✓"],
+        ["2022-04-12", "Aaron Judge", 3, 0, "Played ✓"],
+        ["2022-04-15", "Aaron Judge", 0, 0, "Postponed ⚠️"],
+        ["2022-04-18", "Aaron Judge", 0, 0, "Postponed ⚠️"],
+        ["2022-04-21", "Aaron Judge", 0, 0, "Postponed ⚠️"],
+      ],
+    },
+    drillLabel: "Filter by status — the Postponed rows are pulling down the averages:",
+    drillTable: {
+      headers: ["Status", "Games", "Avg Hits", "Avg Home Runs"],
+      rows: [
+        ["Played ✓", 98, 1.8, 0.4],
+        ["Postponed ⚠️", 34, "0.0 ⚠️", "0.0 ⚠️"],
+      ],
+    },
+    rootCause: "Postponed game rows have 0 hits and 0 home runs — they drag down averages by 26%. Filtering to status = 'Played' reveals the true performance.",
+  },
+
+  nfl: {
+    anomalyLabel: "Patrick Mahomes' passing yards dropped to zero across multiple rows — look:",
+    anomalyTable: {
+      headers: ["Date", "Player", "Pass Yards", "Touchdowns", "Status"],
+      rows: [
+        ["2022-09-08", "Patrick Mahomes", 360, 5, "Played ✓"],
+        ["2022-09-15", "Patrick Mahomes", 0, 0, "Bye ⚠️"],
+        ["2022-09-22", "Patrick Mahomes", 338, 3, "Played ✓"],
+        ["2022-10-06", "Patrick Mahomes", 0, 0, "Bye ⚠️"],
+        ["2022-10-13", "Patrick Mahomes", 423, 4, "Played ✓"],
+      ],
+    },
+    drillLabel: "We segment by status — Bye weeks inflate game count but show zero stats:",
+    drillTable: {
+      headers: ["Status", "Weeks", "Avg Pass Yards", "Avg TDs"],
+      rows: [
+        ["Played ✓", 51, 312, 2.8],
+        ["Bye ⚠️", 3, "0 ⚠️", "0 ⚠️"],
+      ],
+    },
+    rootCause: "Bye-week rows count as game entries but record zero stats — they lower per-game averages by 5–8%. Filter to status = 'Played' for accurate numbers.",
+  },
+
+  soccer: {
+    anomalyLabel: "Inter Miami's goal total collapsed in May 2023 — 3 rows show zero goals:",
+    anomalyTable: {
+      headers: ["Date", "Player", "Goals", "Assists", "Status"],
+      rows: [
+        ["2023-04-08", "Lionel Messi", 2, 1, "Played ✓"],
+        ["2023-04-15", "Lionel Messi", 1, 0, "Played ✓"],
+        ["2023-05-06", "Lionel Messi", 0, 0, "Postponed ⚠️"],
+        ["2023-05-13", "Lionel Messi", 0, 0, "Postponed ⚠️"],
+        ["2023-05-20", "Lionel Messi", 1, 2, "Played ✓"],
+      ],
+    },
+    drillLabel: "Filter by status — postponed matches show no activity and skew the stats:",
+    drillTable: {
+      headers: ["Status", "Matches", "Avg Goals", "Avg Assists"],
+      rows: [
+        ["Played ✓", 38, 0.9, 1.1],
+        ["Postponed ⚠️", 8, "0.0 ⚠️", "0.0 ⚠️"],
+      ],
+    },
+    rootCause: "Postponed match rows count in totals but have 0 stats — removing them increases Messi's average goals per match from 0.65 to 0.9.",
+  },
+
   music: {
-    anomalyLabel: "A new album's play rate collapsed after Track 3 — look at the drop:",
+    anomalyLabel: "Taylor Swift's stream count suddenly spiked to 900M in 3 rows — look at the status:",
     anomalyTable: {
-      headers: ["Track #", "Song", "Duration", "Play Rate"],
+      headers: ["Week", "Artist", "Streams (M)", "Chart Position", "Status"],
       rows: [
-        ["1", "Opening Act", "3:12", "100%"],
-        ["2", "Rising Up", "3:28", "94%"],
-        ["3", "The Moment", "3:05", "87%"],
-        ["4", "Deep Dive", "5:48", "19% ⚠️"],
-        ["5", "Outro", "5:21", "17% ⚠️"],
+        ["2022-10-14", "Taylor Swift", 142, 1, "Active ✓"],
+        ["2022-10-21", "Taylor Swift", 138, 1, "Active ✓"],
+        ["2022-10-28", "Taylor Swift", 900, 1, "TEST ⚠️"],
+        ["2022-11-04", "Taylor Swift", 900, 1, "TEST ⚠️"],
+        ["2022-11-11", "Taylor Swift", 135, 2, "Active ✓"],
       ],
     },
-    drillLabel: "We drill down: compare track duration vs skip rate — the pattern appears:",
+    drillLabel: "Filter by status — TEST rows are QA entries with inflated values:",
     drillTable: {
-      headers: ["Track Length", "Avg Skip Rate", "Example"],
+      headers: ["Status", "Rows", "Avg Streams (M)", "% of Total"],
       rows: [
-        ["Under 3:30", "8%", "Tracks 1–3"],
-        ["3:30 – 5:00", "34%", "—"],
-        ["Over 5:00 ⚠️", "76%", "Tracks 4–5"],
+        ["Active ✓", 412, 89, "92%"],
+        ["TEST ⚠️", 8, "900 ⚠️", "8% ⚠️"],
       ],
     },
-    rootCause: "Tracks over 5 minutes skip at 76%. Track 4 is 40% longer than the platform's typical engagement threshold.",
+    rootCause: "TEST-status rows are internal QA entries with placeholder data (900M streams). They inflate total stream counts by 12%. Filter to Active only.",
   },
-  cricket: {
-    anomalyLabel: "Mumbai Indians lost 6 straight matches — the wins vs losses look very different:",
+
+  netflix: {
+    anomalyLabel: "Stranger Things suddenly shows 1,200M hours watched in 2 rows — is that real?",
     anomalyTable: {
-      headers: ["Match", "Result", "Powerplay Runs Conceded"],
+      headers: ["Week", "Show", "Hours (M)", "Rating", "Status"],
       rows: [
-        ["vs CSK", "Win ✓", 42],
-        ["vs RCB", "Win ✓", 38],
-        ["vs DC", "Loss ⚠️", 67],
-        ["vs KKR", "Loss ⚠️", 71],
-        ["vs SRH", "Loss ⚠️", 63],
+        ["2022-05-27", "Stranger Things", 335, 9.4, "Active ✓"],
+        ["2022-06-03", "Stranger Things", 301, 9.4, "Active ✓"],
+        ["2022-06-10", "Stranger Things", 1200, 9.4, "TEST ⚠️"],
+        ["2022-06-17", "Stranger Things", 1200, 9.4, "TEST ⚠️"],
+        ["2022-06-24", "Stranger Things", 289, 9.3, "Active ✓"],
       ],
     },
-    drillLabel: "We filter by powerplay (overs 1–6) — the pattern is clear:",
+    drillLabel: "Filter by status — TEST rows are QA placeholders with fake numbers:",
     drillTable: {
-      headers: ["Powerplay Runs", "Matches", "Win Rate"],
+      headers: ["Status", "Rows", "Avg Hours (M)", "Impact"],
       rows: [
-        ["Under 50", 8, "87% ✓"],
-        ["50 – 59", 4, "50%"],
-        ["60+ ⚠️", 6, "0% ⚠️"],
+        ["Active ✓", 338, 178, "Real data ✓"],
+        ["TEST ⚠️", 12, "1200 ⚠️", "Inflates average ⚠️"],
       ],
     },
-    rootCause: "Every loss happened when the powerplay conceded 60+ runs. The bowling attack has no plan for aggressive openers.",
+    rootCause: "TEST rows are internal QA entries — not real viewership. They push the average hours watched up by 31%. Filter status = 'Active' before any analysis.",
   },
-  football: {
-    anomalyLabel: "Arsenal lost 5 of 8 away games — when did they concede?",
+
+  shopping: {
+    anomalyLabel: "iPhone 15 Pro shows $50,000 revenue in 2 rows — way above normal:",
     anomalyTable: {
-      headers: ["Match", "Result", "Goals Conceded", "Minute"],
+      headers: ["Week", "Product", "Revenue ($)", "Returns", "Status"],
       rows: [
-        ["vs City (A)", "Loss ⚠️", 2, "78, 89"],
-        ["vs Liverpool (A)", "Loss ⚠️", 1, "83"],
-        ["vs Chelsea (A)", "Draw", 1, "71"],
-        ["vs Spurs (A)", "Win ✓", 0, "—"],
-        ["vs Wolves (A)", "Loss ⚠️", 2, "76, 90+2"],
+        ["2023-09-22", "iPhone 15 Pro", 2100, 12, "Active ✓"],
+        ["2023-09-29", "iPhone 15 Pro", 1980, 10, "Active ✓"],
+        ["2023-10-06", "iPhone 15 Pro", 50000, 0, "TEST ⚠️"],
+        ["2023-10-13", "iPhone 15 Pro", 50000, 0, "TEST ⚠️"],
+        ["2023-10-20", "iPhone 15 Pro", 1750, 8, "Active ✓"],
       ],
     },
-    drillLabel: "We segment goals conceded by match minute — the late-game problem jumps out:",
+    drillLabel: "Filter by status — TEST rows are fake QA orders inflating revenue:",
     drillTable: {
-      headers: ["Match Phase", "Goals Conceded", "% of Total"],
+      headers: ["Status", "Rows", "Avg Revenue ($)", "Returns"],
       rows: [
-        ["0–60 min", 3, "18%"],
-        ["61–75 min", 2, "12%"],
-        ["76–90 min ⚠️", 12, "70% ⚠️"],
+        ["Active ✓", 460, 1840, 9],
+        ["TEST ⚠️", 20, "50000 ⚠️", "0 ⚠️"],
       ],
     },
-    rootCause: "70% of conceded goals come in the final 15 minutes — a clear fitness or tactical breakdown late in games.",
+    rootCause: "TEST orders use a placeholder $50,000 value and 0 returns. Leaving them in doubles the reported revenue. Filter to Active rows for accurate totals.",
   },
-  movies: {
-    anomalyLabel: "3 big-budget films flopped despite star casts — what do they share?",
+
+  retail: {
+    anomalyLabel: "Standing Desk shows 9,999 units sold in 2 rows — 200× the weekly normal:",
     anomalyTable: {
-      headers: ["Film", "Budget (₹Cr)", "Week 1 (₹Cr)", "ROI"],
+      headers: ["Week", "Product", "Units Sold", "Margin ($)", "Status"],
       rows: [
-        ["Film A", 180, 32, "−82% ⚠️"],
-        ["Film B", 220, 41, "−81% ⚠️"],
-        ["Film C", 150, 29, "−81% ⚠️"],
-        ["Pathaan", 250, 300, "+20% ✓"],
+        ["2024-01-05", "Standing Desk", 48, 720, "Active ✓"],
+        ["2024-01-12", "Standing Desk", 51, 765, "Active ✓"],
+        ["2024-01-19", "Standing Desk", 9999, 0, "TEST ⚠️"],
+        ["2024-01-26", "Standing Desk", 9999, 0, "TEST ⚠️"],
+        ["2024-02-02", "Standing Desk", 45, 675, "Active ✓"],
       ],
     },
-    drillLabel: "We split revenue by region — all 3 flops share one pattern:",
+    drillLabel: "Filter by status — TEST rows are inventory audit entries with dummy values:",
     drillTable: {
-      headers: ["Region", "Pathaan Share", "Flop Films Share"],
+      headers: ["Status", "Rows", "Avg Units", "Avg Margin ($)"],
       rows: [
-        ["North India", "38%", "39%"],
-        ["West India", "29%", "28%"],
-        ["South India ⚠️", "26%", "8% ⚠️"],
-        ["East India", "7%", "25%"],
+        ["Active ✓", 400, 52, 780],
+        ["TEST ⚠️", 20, "9999 ⚠️", "0 ⚠️"],
       ],
     },
-    rootCause: "All 3 flops earned less than 10% of revenue from South India. No regional marketing, no dubbed versions.",
-  },
-  ecommerce: {
-    anomalyLabel: "Cart abandonment jumped 24% in October — something changed:",
-    anomalyTable: {
-      headers: ["Week", "Abandonment Rate", "Change"],
-      rows: [
-        ["Sep W3", "31%", "normal"],
-        ["Sep W4", "32%", "normal"],
-        ["Oct W1", "38%", "+6pts ⚠️"],
-        ["Oct W2", "41%", "+9pts ⚠️"],
-        ["Oct W3", "43%", "+11pts ⚠️"],
-      ],
-    },
-    drillLabel: "We join cart data with inventory — abandoned carts vs in-stock items:",
-    drillTable: {
-      headers: ["Cart Status", "All Items In Stock", "≥1 Item Out of Stock"],
-      rows: [
-        ["Completed ✓", "74%", "26%"],
-        ["Abandoned ⚠️", "18%", "82% ⚠️"],
-      ],
-    },
-    rootCause: "82% of abandoned carts had at least one out-of-stock item at checkout. Inventory sync with the cart is broken.",
-  },
-  food: {
-    anomalyLabel: "Ratings dropped 0.6 stars on weekends — what changed?",
-    anomalyTable: {
-      headers: ["Day", "Avg Delivery (min)", "Avg Rating"],
-      rows: [
-        ["Monday", 26, 4.4],
-        ["Wednesday", 28, 4.3],
-        ["Friday", 31, 4.1],
-        ["Saturday ⚠️", 49, "3.7 ⚠️"],
-        ["Sunday ⚠️", 52, "3.6 ⚠️"],
-      ],
-    },
-    drillLabel: "We filter by time of day on weekends — the peak hours show the crisis:",
-    drillTable: {
-      headers: ["Weekend Time Slot", "Avg Delivery (min)", "Delivery Partners"],
-      rows: [
-        ["12–3 PM", 34, 18],
-        ["3–6 PM", 38, 15],
-        ["6–9 PM ⚠️", 58, "8 ⚠️"],
-        ["9 PM+ ⚠️", 61, "6 ⚠️"],
-      ],
-    },
-    rootCause: "Weekend evenings have 3× the orders but only 44% of the weekday delivery staff. The shortfall causes long delays and rating drops.",
-  },
-  stocks: {
-    anomalyLabel: "IT sector fell 12% in Q2 — why when the broader market was up?",
-    anomalyTable: {
-      headers: ["Sector", "Q2 Return", "vs Nifty 50"],
-      rows: [
-        ["Banking", "+8.2%", "+5.1% ✓"],
-        ["FMCG", "+5.4%", "+2.3% ✓"],
-        ["IT ⚠️", "−12.1%", "−15.2% ⚠️"],
-        ["Energy", "+11.3%", "+8.2% ✓"],
-      ],
-    },
-    drillLabel: "We correlate IT returns with macroeconomic events — the link is clear:",
-    drillTable: {
-      headers: ["US Fed Rate Decision", "India IT Sector Return", "FII Flows"],
-      rows: [
-        ["Hold (no change)", "+4.1%", "Positive"],
-        ["Hike +0.25%", "−5.8%", "Outflow"],
-        ["Hike ≥0.5% ⚠️", "−12.4% ⚠️", "Heavy outflow"],
-      ],
-    },
-    rootCause: "US rate hikes of 0.5%+ trigger foreign investor outflows from Indian IT stocks. Q2 had two consecutive hikes.",
-  },
-  healthcare: {
-    anomalyLabel: "ER wait times increased 35% in January — something went wrong:",
-    anomalyTable: {
-      headers: ["Month", "Avg Wait (min)", "ER Admissions", "Night Staff"],
-      rows: [
-        ["October", 22, 820, 11],
-        ["November", 24, 890, 10],
-        ["December", 26, 960, 9],
-        ["January ⚠️", 41, "1,240 ⚠️", "6 ⚠️"],
-      ],
-    },
-    drillLabel: "We cross-reference shift rosters with admission volumes — the gap is stark:",
-    drillTable: {
-      headers: ["Night Staff Count", "Avg Wait (min)", "Admissions/Staff"],
-      rows: [
-        ["10–12 staff", 22, 81],
-        ["7–9 staff", 29, 106],
-        ["< 7 staff ⚠️", 43, "177 ⚠️"],
-      ],
-    },
-    rootCause: "When night staff falls below 7, each person handles 2× the normal load. January had a flu spike AND 3 staff on leave simultaneously.",
-  },
-  travel: {
-    anomalyLabel: "Goa hotel bookings dropped 32% vs last year — the weekly pattern tells a story:",
-    anomalyTable: {
-      headers: ["Week", "Bookings", "Cancellations", "Net"],
-      rows: [
-        ["Week 1 (Jun)", 420, 38, 382],
-        ["Week 2 (Jun)", 390, 62, 328],
-        ["Week 3 (Jun) ⚠️", 280, "189 ⚠️", "91 ⚠️"],
-        ["Week 4 (Jun) ⚠️", 190, "162 ⚠️", "28 ⚠️"],
-      ],
-    },
-    drillLabel: "We join booking dates with weather data — the cancellation trigger is obvious:",
-    drillTable: {
-      headers: ["Days to Arrival", "Cancellation Rate (Normal)", "Cancellation Rate (Monsoon early)"],
-      rows: [
-        ["14+ days ahead", "8%", "11%"],
-        ["7–13 days", "14%", "22%"],
-        ["< 3 days ⚠️", "19%", "67% ⚠️"],
-      ],
-    },
-    rootCause: "Monsoon arrived 2 weeks early. 67% of bookings within 3 days of arrival were cancelled once the weather turned — most hotels had no early-warning refund policy.",
-  },
-  gaming: {
-    anomalyLabel: "Churn jumped 18% after patch v2.5 — but not for all players equally:",
-    anomalyTable: {
-      headers: ["Player Level", "Pre-patch Churn", "Post-patch Churn", "Change"],
-      rows: [
-        ["Level 1–20", "12%", "13%", "+1%"],
-        ["Level 21–50", "9%", "11%", "+2%"],
-        ["Level 51–80 ⚠️", "7%", "24%", "+17% ⚠️"],
-        ["Level 80+ ⚠️", "5%", "31%", "+26% ⚠️"],
-      ],
-    },
-    drillLabel: "We segment churn by 'main weapon used' — veteran players share something:",
-    drillTable: {
-      headers: ["Main Weapon", "Churn Rate Post-patch", "Patch Change"],
-      rows: [
-        ["Shotgun", "9%", "No nerf"],
-        ["Sniper", "11%", "Minor nerf"],
-        ["M416 ⚠️", "34% ⚠️", "−22% damage nerf"],
-        ["AKM ⚠️", "29% ⚠️", "−18% damage nerf"],
-      ],
-    },
-    rootCause: "The two most popular weapons among high-level players (M416 and AKM) were nerfed heavily. Veterans feel their skill advantage was removed.",
+    rootCause: "TEST rows are inventory system audit entries — not real sales. They inflate unit count totals by 14×. Filter to status = 'Active' for accurate sales data.",
   },
 };
 
-const DEFAULT_DIAG = DIAGNOSTIC_DATA.cricket;
+const DEFAULT_DIAG = DIAGNOSTIC_DATA.baseball;
 
 // Small reusable table renderer
 function DataTable({ headers, rows }: { headers: string[]; rows: (string | number)[][] }) {

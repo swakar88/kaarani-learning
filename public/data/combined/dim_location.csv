@@ -1,0 +1,29 @@
+location_key,flavor_id,name,city,state,type,capacity
+dodger,baseball,Dodger Stadium,Los Angeles,CA,Stadium,56000
+yankee,baseball,Yankee Stadium,New York,NY,Stadium,47309
+truist,baseball,Truist Park,Atlanta,GA,Stadium,41084
+minute,baseball,Minute Maid Park,Houston,TX,Stadium,41168
+arrowhead,nfl,Arrowhead Stadium,Kansas City,MO,Stadium,76416
+mandt,nfl,M&T Bank Stadium,Baltimore,MD,Stadium,71008
+highmark,nfl,Highmark Stadium,Orchard Park,NY,Stadium,71608
+lincoln,nfl,Lincoln Financial Field,Philadelphia,PA,Stadium,69796
+chase,soccer,Chase Stadium,Fort Lauderdale,FL,Stadium,21550
+bmo,soccer,BMO Field,Toronto,ON,Stadium,30000
+lower,soccer,Lower.com Field,Columbus,OH,Stadium,20371
+dignity,soccer,Dignity Health Sports Park,Carson,CA,Stadium,27000
+spotify,music,Spotify,Stockholm,Global,Platform,600000000
+apple,music,Apple Music,Cupertino,Global,Platform,100000000
+youtube,music,YouTube Music,San Bruno,Global,Platform,80000000
+amazon,music,Amazon Music,Seattle,Global,Platform,55000000
+netflix,netflix,Netflix,Los Gatos,CA,Platform,260000000
+hulu,netflix,Hulu,Santa Monica,CA,Platform,50000000
+hbo,netflix,Max (HBO),New York,NY,Platform,95000000
+prime,netflix,Prime Video,Seattle,WA,Platform,200000000
+amazon,shopping,Amazon,Seattle,WA,Platform,300000000
+ebay,shopping,eBay,San Jose,CA,Platform,135000000
+walmart,shopping,Walmart.com,Bentonville,AR,Platform,120000000
+target,shopping,Target.com,Minneapolis,MN,Platform,50000000
+walmart,retail,Walmart Supercenter,Bentonville,AR,Store,150000
+target,retail,Target,Minneapolis,MN,Store,80000
+costco,retail,Costco Wholesale,Issaquah,WA,Store,120000
+kroger,retail,Kroger,Cincinnati,OH,Store,50000

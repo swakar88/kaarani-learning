@@ -195,45 +195,40 @@ export const MODULE_QUIZZES: Record<number, ModuleQuiz> = {
   },
 };
 
-export const KAGGLE_LINKS: Record<string, { label: string; url: string }> = {
-  cricket: {
-    label: "IPL Complete Dataset",
-    url: "https://www.kaggle.com/datasets/patrickb1912/ipl-complete-dataset-20082020",
+export const KAGGLE_LINKS: Record<string, { label: string; url: string; modelUrl?: string }> = {
+  baseball: {
+    label: "Baseball (MLB) practice dataset",
+    url: "/data/practice/baseball_messy.csv",
+    modelUrl: "/data/practice/baseball_model/fact_activity.csv",
   },
-  football: {
-    label: "Premier League Stats",
-    url: "https://www.kaggle.com/datasets/saife245/english-premier-league",
+  nfl: {
+    label: "American Football (NFL) practice dataset",
+    url: "/data/practice/nfl_messy.csv",
+    modelUrl: "/data/practice/nfl_model/fact_activity.csv",
   },
-  movies: {
-    label: "Bollywood Box Office Data",
-    url: "https://www.kaggle.com/datasets/bharatnatrayn/movies-dataset-for-feature-extraction-prediction",
-  },
-  ecommerce: {
-    label: "UCI Online Retail Dataset",
-    url: "https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci",
-  },
-  food: {
-    label: "Zomato Restaurant Data",
-    url: "https://www.kaggle.com/datasets/shrutimehta/zomato-restaurants-data",
-  },
-  stocks: {
-    label: "Nifty50 Historical Stock Data",
-    url: "https://www.kaggle.com/datasets/rohanrao/nifty50-stock-market-data",
-  },
-  healthcare: {
-    label: "Healthcare Analytics Dataset",
-    url: "https://www.kaggle.com/datasets/nehaprabhavalkar/av-healthcare-analytics-ii",
+  soccer: {
+    label: "Soccer (MLS) practice dataset",
+    url: "/data/practice/soccer_messy.csv",
+    modelUrl: "/data/practice/soccer_model/fact_activity.csv",
   },
   music: {
-    label: "Spotify Tracks Dataset",
-    url: "https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset",
+    label: "Music & Streaming practice dataset",
+    url: "/data/practice/music_messy.csv",
+    modelUrl: "/data/practice/music_model/fact_activity.csv",
   },
-  travel: {
-    label: "Flight Price Prediction Dataset",
-    url: "https://www.kaggle.com/datasets/shubhambathwal/flight-price-prediction",
+  netflix: {
+    label: "TV & Streaming practice dataset",
+    url: "/data/practice/netflix_messy.csv",
+    modelUrl: "/data/practice/netflix_model/fact_activity.csv",
   },
-  gaming: {
-    label: "Video Games Sales Dataset",
-    url: "https://www.kaggle.com/datasets/gregorut/videogamesales",
+  shopping: {
+    label: "Online Shopping practice dataset",
+    url: "/data/practice/shopping_messy.csv",
+    modelUrl: "/data/practice/shopping_model/fact_activity.csv",
+  },
+  retail: {
+    label: "Retail practice dataset",
+    url: "/data/practice/retail_messy.csv",
+    modelUrl: "/data/practice/retail_model/fact_activity.csv",
   },
 };

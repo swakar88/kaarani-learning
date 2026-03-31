@@ -1,0 +1,49 @@
+entity_key,flavor_id,name,role,category_key,debut_year
+ohtani,baseball,Shohei Ohtani,Designated Hitter / Pitcher,lad,2018
+betts,baseball,Mookie Betts,Right Fielder,lad,2014
+freeman,baseball,Freddie Freeman,First Baseman,lad,2010
+judge,baseball,Aaron Judge,Center Fielder,nyy,2016
+acuna,baseball,Ronald Acuña Jr.,Right Fielder,atl,2018
+alvarez,baseball,Yordan Alvarez,Designated Hitter,hou,2019
+soto,baseball,Juan Soto,Left Fielder,nyy,2018
+mahomes,nfl,Patrick Mahomes,Quarterback,kc,2017
+jackson,nfl,Lamar Jackson,Quarterback,bal,2018
+allen,nfl,Josh Allen,Quarterback,buf,2018
+hurts,nfl,Jalen Hurts,Quarterback,phi,2020
+stroud,nfl,CJ Stroud,Quarterback,hou,2023
+prescott,nfl,Dak Prescott,Quarterback,dal,2016
+tua,nfl,Tua Tagovailoa,Quarterback,mia,2020
+messi,soccer,Lionel Messi,Forward,mia,2023
+insigne,soccer,Lorenzo Insigne,Winger,tor,2022
+cucho,soccer,Cucho Hernandez,Striker,col,2022
+puig,soccer,Riqui Puig,Midfielder,lag,2022
+shaqiri,soccer,Xherdan Shaqiri,Winger,chi,2022
+nani,soccer,Nani,Winger,orl,2021
+swift,music,Taylor Swift,Pop,pop,2006
+drake,music,Drake,Hip-Hop/Rap,hiphop,2006
+bunny,music,Bad Bunny,Latin Trap/Reggaeton,latin,2016
+weeknd,music,The Weeknd,R&B/Pop,rnb,2010
+eilish,music,Billie Eilish,Alternative/Pop,alt,2015
+wallen,music,Morgan Wallen,Country,country,2014
+sza,music,SZA,R&B/Soul,rnb,2012
+stranger,netflix,Stranger Things,Sci-Fi/Horror,scifi,2016
+wednesday,netflix,Wednesday,Comedy/Horror,drama,2022
+squid,netflix,Squid Game,Thriller/Drama,thriller,2021
+bridgerton,netflix,Bridgerton,Romance/Drama,romance,2020
+ozark,netflix,Ozark,Crime/Thriller,crime,2017
+crown,netflix,The Crown,Historical Drama,drama,2016
+beef,netflix,Beef,Dark Comedy/Drama,drama,2023
+iphone,shopping,iPhone 15 Pro,Smartphone,electronics,2023
+airpods,shopping,AirPods Pro 2,Audio,audio,2022
+nike,shopping,Nike Air Max 270,Footwear,clothing,2018
+sony,shopping,Sony WH-1000XM5,Headphones,audio,2022
+ipad,shopping,iPad Air 5,Tablet,electronics,2022
+samsung,shopping,"Samsung 65"" 4K TV",Television,electronics,2023
+instantpot,shopping,Instant Pot Duo,Kitchen,kitchen,2019
+milk,retail,Organic Whole Milk,Dairy,grocery,2010
+tv4k,retail,"65"" 4K Smart TV",Electronics,electronics,2020
+shoes,retail,Men's Running Shoes,Footwear,clothing,2018
+keurig,retail,Keurig K-Elite,Kitchen Appliance,kitchen,2017
+desk,retail,Standing Desk Converter,Office Furniture,office,2019
+jacket,retail,Winter Down Jacket,Outerwear,clothing,2020
+yogamat,retail,Yoga Mat Premium,Fitness,fitness,2018

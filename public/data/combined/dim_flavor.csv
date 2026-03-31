@@ -1,0 +1,8 @@
+flavor_id,label,metric1_label,metric2_label,activity_type
+baseball,Baseball (MLB),hits,home_runs,game
+nfl,American Football (NFL),pass_yards,touchdowns,game
+soccer,Soccer (MLS),goals,assists,match
+music,Music & Streaming,streams_millions,chart_position,stream
+netflix,TV & Streaming,hours_watched_millions,rating,episode
+shopping,Online Shopping,revenue_usd,returns,order
+retail,Retail,units_sold,margin_usd,sale

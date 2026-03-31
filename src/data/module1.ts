@@ -5,279 +5,204 @@ export interface AnalyticsExample {
   descriptive: {
     headline: string;    // bold stat or finding
     detail: string;      // supporting context
-    metric: string;      // e.g. "847 runs"
+    metric: string;      // e.g. "44 home runs"
     dimension: string;   // e.g. "your team"
-    period: string;      // e.g. "this season"
+    period: string;      // e.g. "2023 season"
   };
   diagnostic: {
-    problem: string;     // something unexpected in YOUR data
+    problem: string;     // something unexpected in the data
     finding: string;     // the root cause
     drillDown: string;   // what dimension revealed it
   };
   predictive: {
-    question: string;    // what are we predicting — for YOU?
+    question: string;    // what are we predicting?
     prediction: string;  // the forecast
     confidence: string;  // e.g. "74% likely"
   };
   prescriptive: {
-    question: string;    // what should YOU do?
+    question: string;    // what should be done?
     recommendation: string;
     expectedImpact: string;
   };
 }
 
 export const FLAVOR_ANALYTICS_EXAMPLES: Record<string, AnalyticsExample> = {
-  cricket: {
+  baseball: {
     descriptive: {
-      headline: "Your fantasy team scored 847 points across 22 IPL match days",
-      detail: "you picked Rohit Sharma in 18 of those matches — he was your most selected player",
-      metric: "847 fantasy points",
-      dimension: "your fantasy team",
-      period: "IPL 2023",
+      headline: "Aaron Judge hit 62 home runs across 157 games in 2022 — a new AL record",
+      detail: "the Yankees scored 807 runs that season; Judge drove in 131 of them (16%) despite playing in 96% of games",
+      metric: "62 home runs",
+      dimension: "NY Yankees",
+      period: "2022 season",
     },
     diagnostic: {
-      problem: "Your team lost the most points in 6 consecutive match days — why?",
-      finding: "All 6 bad weeks, you picked Rohit Sharma as captain in chasing innings — his average drops by 40% when chasing",
-      drillDown: "Filtering your selections by 'match situation = chase' revealed the pattern instantly",
+      problem: "Shohei Ohtani's hits dropped 31% in August 2023 — what happened?",
+      finding: "Filtering by opponent pitcher type shows he faced left-handed starters in 7 of 9 August games — his average drops from .304 to .198 vs lefties",
+      drillDown: "Splitting game rows by 'pitcher_handedness' surfaced the pattern instantly",
     },
     predictive: {
-      question: "Which players should you pick for the next match day?",
-      prediction: "Virat Kohli is predicted to score 22% more runs on flat pitches — perfect for your team on Sunday's venue",
-      confidence: "Based on 5 seasons of player-venue data",
+      question: "Which players are likely to lead home runs in the 2024 season?",
+      prediction: "Based on 3 seasons of launch-angle and exit-velocity data, Yordan Alvarez is predicted to hit 40+ home runs with 82% confidence",
+      confidence: "Based on 2022–2024 stat trends and ballpark factors",
     },
     prescriptive: {
-      question: "How can you improve your fantasy points this week?",
-      recommendation: "Pick spinners in overs 15–19: opposition teams score 18% fewer runs off spin in that phase — great for differential picks",
-      expectedImpact: "Expected +12 points per match day compared to your current selection pattern",
+      question: "How should a manager set the batting order to maximize runs?",
+      recommendation: "Put your highest OBP player at #1 and highest SLG at #4 — historical lineup data shows this combination scores 0.4 more runs per game on average",
+      expectedImpact: "Estimated +65 runs per 162-game season vs a randomly set lineup",
     },
   },
 
-  football: {
+  nfl: {
     descriptive: {
-      headline: "Your Fantasy Premier League team scored 1,840 points this season",
-      detail: "Haaland was your most-transferred-in player — and scored 36 goals, outscoring 17 full clubs",
-      metric: "1,840 FPL points",
-      dimension: "your FPL team",
-      period: "PL 2022–23",
+      headline: "Patrick Mahomes threw for 5,250 passing yards across 17 games in the 2022 season",
+      detail: "he led the league in touchdowns (41) while only throwing 12 interceptions — a 3.4:1 TD-to-INT ratio",
+      metric: "5,250 passing yards",
+      dimension: "Kansas City Chiefs",
+      period: "2022 season",
     },
     diagnostic: {
-      problem: "Your FPL rank dropped in 5 consecutive gameweeks — what went wrong?",
-      finding: "In all 5 bad weeks, you captained Arsenal defenders in away fixtures — they conceded in 75–90 minutes every time",
-      drillDown: "Segmenting your captain picks by 'home vs away' and 'match minute of concession' exposed the pattern",
+      problem: "Josh Allen's touchdown count fell 38% in the final 4 weeks of the season — why?",
+      finding: "Filtering by 'game temperature' shows all 4 low-scoring games were in temperatures below 20°F — his completion rate drops 14% in cold weather",
+      drillDown: "Joining game stats with weather data and filtering by temperature revealed the pattern",
     },
     predictive: {
-      question: "Which players are worth buying before the next gameweek?",
-      prediction: "Liverpool have a 68% chance of top 4 — their defenders are predicted to keep 3 clean sheets in the next 5 games",
-      confidence: "Based on fixture difficulty and last 10-match rolling average",
+      question: "Which QBs are most likely to reach the Super Bowl next season?",
+      prediction: "Lamar Jackson has an 84% win rate in games where he rushes 8+ times — when his rushing is suppressed, the Ravens win only 52%",
+      confidence: "Based on 3 seasons of game-level rushing and passing splits",
     },
     prescriptive: {
-      question: "Who should you captain this weekend?",
-      recommendation: "Triple-captain Haaland in home fixtures — he scores 40% of City's goals and blanks only 2 in 8 home games",
-      expectedImpact: "Increases expected points from 6.2 to 9.8 per gameweek when captaining at home",
+      question: "How can an offense maximize red-zone touchdowns?",
+      recommendation: "Use play-action passes inside the 10-yard line — NFL data shows a 23% higher TD rate vs. non-play-action in that zone",
+      expectedImpact: "Teams averaging 4+ red-zone PA passes per game score 6 more touchdowns per season",
     },
   },
 
-  movies: {
+  soccer: {
     descriptive: {
-      headline: "You watched 94 films on OTT this year — Action is your top genre at 38%",
-      detail: "you rated 12 films 5 stars — all were action films with a known franchise or sequel",
-      metric: "94 films watched",
-      dimension: "your watch history",
-      period: "this year",
+      headline: "Lionel Messi scored 11 goals and 14 assists in his first MLS season with Inter Miami",
+      detail: "he averaged a goal or assist every 71 minutes — the best rate of any player in MLS that season",
+      metric: "11 goals, 14 assists",
+      dimension: "Inter Miami",
+      period: "2023 MLS season",
     },
     diagnostic: {
-      problem: "You stopped 3 films halfway — what made you quit?",
-      finding: "All 3 had weak second acts with slow pacing — your watch data shows you drop off if nothing happens in minutes 30–50",
-      drillDown: "Splitting your watch-time data by 'genre' and 'drop-off minute' revealed the pacing problem",
+      problem: "Inter Miami scored 42% fewer goals in away games — why the drop?",
+      finding: "Drilling into away match data reveals they concede the ball more in the first 15 minutes away — leading to fewer attacking possessions overall",
+      drillDown: "Splitting goal counts by 'home vs away' and 'match minute' exposed the early defensive vulnerability",
     },
     predictive: {
-      question: "Which upcoming films are you most likely to enjoy?",
-      prediction: "Action films with known IP are predicted to earn your 5-star rating 2.3× more than original scripts",
-      confidence: "Based on genre and IP analysis of your last 50 watched films",
+      question: "Which MLS teams are most likely to qualify for the playoffs?",
+      prediction: "Teams with 6+ goals per month in the first half of the season go on to qualify 78% of the time — Columbus is currently on that pace",
+      confidence: "Based on 5 years of MLS first-half pace vs. final standings",
     },
     prescriptive: {
-      question: "When should you watch that new blockbuster?",
-      recommendation: "Watch on its opening weekend — the buzz and discussions enhance your enjoyment; your ratings for first-week watches are 0.8 stars higher on average",
-      expectedImpact: "Better experience and 31% less chance of getting spoiled before watching",
-    },
-  },
-
-  ecommerce: {
-    descriptive: {
-      headline: "You placed 47 orders worth ₹28,400 on Amazon this year",
-      detail: "Electronics is your top category — 3 orders drove 52% of your total spend",
-      metric: "₹28,400 spent",
-      dimension: "your order history",
-      period: "this year",
-    },
-    diagnostic: {
-      problem: "You abandoned 8 carts in October — what stopped you from buying?",
-      finding: "All 8 abandoned carts had at least one item that went out-of-stock while you were still browsing",
-      drillDown: "Joining your cart data with product availability timestamps revealed the timing mismatch",
-    },
-    predictive: {
-      question: "Which products are you likely to reorder in the next 30 days?",
-      prediction: "Based on your purchase rhythm, your skincare products are predicted to run out in 12 days — you usually reorder 8 days before running out",
-      confidence: "Based on your last 3 purchase cycles for this product",
-    },
-    prescriptive: {
-      question: "How can you save money on your regular orders?",
-      recommendation: "Switch your top 3 repeat purchases to Subscribe & Save — your spending pattern shows you'd save ₹1,200/year",
-      expectedImpact: "19% savings vs one-off purchases, plus guaranteed stock availability",
-    },
-  },
-
-  food: {
-    descriptive: {
-      headline: "You ordered food delivery 89 times this year — Biryani is your #1 dish",
-      detail: "you rated 73% of orders 4 stars or higher, but gave 3-star or below to 14 orders",
-      metric: "89 orders placed",
-      dimension: "your Swiggy account",
-      period: "this year",
-    },
-    diagnostic: {
-      problem: "You gave 3-star ratings on 14 orders — what did those orders have in common?",
-      finding: "All 14 low-rated orders were placed on weekend evenings after 7 PM — delivery took 49+ minutes on average",
-      drillDown: "Filtering your orders by 'day of week' and 'delivery time' surfaced the pattern immediately",
-    },
-    predictive: {
-      question: "What will you most likely order this Friday evening?",
-      prediction: "Based on your pattern, 78% chance you'll order Biryani from Behrouz — you've done it 11 Fridays in a row",
-      confidence: "Based on 18 months of your order history",
-    },
-    prescriptive: {
-      question: "How can you get better food and ratings you deserve?",
-      recommendation: "Order before 6 PM on weekends — your data shows delivery is 22 minutes faster and your own satisfaction ratings jump by 0.6 stars",
-      expectedImpact: "You'd save ~40 minutes in total delivery time per month and enjoy your food hot",
-    },
-  },
-
-  stocks: {
-    descriptive: {
-      headline: "Your portfolio grew 18.4% this year — Reliance was your best performer",
-      detail: "your IT stocks make up 42% of your portfolio, with average daily trading volume of 8.2M shares",
-      metric: "18.4% return",
-      dimension: "your portfolio",
-      period: "FY2023–24",
-    },
-    diagnostic: {
-      problem: "Your IT stocks fell 12% in Q2 — why when the rest of the market was up?",
-      finding: "US interest rate hikes triggered foreign investor outflows — your IT holdings absorbed the full impact",
-      drillDown: "Correlating your portfolio returns with 'US Fed rate decisions' and 'FII flow data' revealed the link",
-    },
-    predictive: {
-      question: "Which sectors in your watchlist are likely to outperform next quarter?",
-      prediction: "FMCG and Pharma stocks in your watchlist are predicted to outperform when inflation stays above 5% — both looking strong",
-      confidence: "Based on 10-year historical sector correlation with inflation data",
-    },
-    prescriptive: {
-      question: "Should you rebalance your portfolio right now?",
-      recommendation: "Trim IT holdings by 8% when Nifty IT P/E exceeds 28 — your portfolio back-test shows this reduced drawdown by 14%",
-      expectedImpact: "Reduces your portfolio volatility by 14% on average while keeping long-term returns intact",
-    },
-  },
-
-  healthcare: {
-    descriptive: {
-      headline: "You visited the clinic 14 times this year — Cardiology was your most visited department",
-      detail: "your average appointment wait time was 22 minutes in Q1, rising to 41 minutes in January",
-      metric: "14 clinic visits",
-      dimension: "your health record",
-      period: "this year",
-    },
-    diagnostic: {
-      problem: "Your ER wait time jumped to 41 minutes in January — up from 22 in October. Why?",
-      finding: "January had both a respiratory illness spike AND 3 night-shift staff on leave simultaneously — your arrival time (10 PM) hit the worst window",
-      drillDown: "Cross-referencing your visit time with 'shift rosters' and 'admission volumes' on that date revealed the double whammy",
-    },
-    predictive: {
-      question: "When is the best time to book your next appointment?",
-      prediction: "High flu case volumes predicted for weeks 6–10 — your Cardiology department gets 22% busier; book week 5 to beat the rush",
-      confidence: "Based on 5-year seasonal admission patterns at your hospital",
-    },
-    prescriptive: {
-      question: "How can you get faster care and shorter waits?",
-      recommendation: "Book morning slots on Tuesdays or Wednesdays — your own visit data shows average wait of 18 minutes vs 41 minutes on weekend evenings",
-      expectedImpact: "Save 23 minutes per visit on average — and get seen by a less-rushed doctor",
+      question: "How can a club improve scoring in away matches?",
+      recommendation: "Defensive pressing in the first 15 minutes of away games reduces opponent counterattacks by 31% — adopt a high press to start",
+      expectedImpact: "Expected +0.4 goals per away game — roughly 4 extra points in the standings per season",
     },
   },
 
   music: {
     descriptive: {
-      headline: "You streamed 2,847 songs this year — Arijit Singh is your #1 artist",
-      detail: "your top 10 artists account for 68% of your total listening time",
-      metric: "2,847 songs played",
-      dimension: "your Spotify account",
-      period: "this year",
+      headline: "Taylor Swift's 'Anti-Hero' logged 142 million streams in its first week — the most in 2022",
+      detail: "she held 6 of the top 10 chart positions simultaneously — the first artist to do so in Spotify history",
+      metric: "142M streams in week 1",
+      dimension: "Midnights album",
+      period: "October 2022",
     },
     diagnostic: {
-      problem: "You stopped listening to a new album after Track 3 — why did you drop off?",
-      finding: "Tracks 4 and 5 were both over 5 minutes — your skip data shows you abandon 76% of tracks that exceed 5 minutes",
-      drillDown: "Comparing 'track duration' against your personal 'skip rate' surfaced the pattern instantly",
+      problem: "Drake's weekly streams dropped 44% across 3 consecutive weeks — what caused it?",
+      finding: "Filtering by release calendar shows no new music dropped in those weeks AND two major competing artists released albums — stream share split 3 ways",
+      drillDown: "Joining weekly stream data with the release schedule revealed the cannibalization effect",
     },
     predictive: {
-      question: "Which new releases this Friday are you most likely to love?",
-      prediction: "Based on your history, tracks combining Arijit Singh's vocals with soft piano have a 78% chance of making it onto your repeat plays",
-      confidence: "Based on 2 years of your personal listening patterns",
+      question: "Which genre will top the charts in the coming quarter?",
+      prediction: "Latin pop has grown 28% quarter-over-quarter for 4 straight quarters — it is predicted to overtake hip-hop as the #1 genre by streams next quarter",
+      confidence: "Based on 3 years of weekly chart data and genre tagging",
     },
     prescriptive: {
-      question: "How can your Focus playlist work better for you?",
-      recommendation: "Your data shows you skip songs over 3:30 during work sessions — refresh your Focus playlist with shorter tracks",
-      expectedImpact: "Estimated playlist completion rate improves from your current 34% to 71%",
+      question: "When should an artist drop a new single for maximum streams?",
+      recommendation: "Release on Friday at midnight EST — Spotify data shows Friday drops average 34% more first-week streams than mid-week releases",
+      expectedImpact: "An artist with 5M monthly listeners can expect ~800K extra streams per release by choosing Friday",
     },
   },
 
-  travel: {
+  netflix: {
     descriptive: {
-      headline: "You took 8 flights this year — Delhi–Mumbai was your most flown route",
-      detail: "your average fare was ₹5,100 but 3 last-minute bookings cost you ₹7,200 each",
-      metric: "8 flights taken",
-      dimension: "your booking history",
-      period: "this year",
+      headline: "Stranger Things Season 4 logged 1.35 billion hours watched in its first 28 days",
+      detail: "that made it the most-watched English-language series in Netflix history — surpassing Bridgerton Season 1",
+      metric: "1.35B hours watched",
+      dimension: "Netflix originals",
+      period: "May–June 2022",
     },
     diagnostic: {
-      problem: "Your Goa trip in June was disrupted and cost you ₹12,000 in cancellation fees — why?",
-      finding: "The monsoon arrived 2 weeks early; your booking was within 3 days of arrival — the highest-risk cancellation window",
-      drillDown: "Joining your 'booking lead time' with 'historical weather data' for June showed the cancellation risk was 67%",
+      problem: "Wednesday dropped from #1 to #8 in the weekly rankings in just 3 weeks — why the fall?",
+      finding: "Filtering by week and comparing to completion rate data shows 68% of viewers stopped before episode 6 — the story lost momentum after the mid-season reveal",
+      drillDown: "Comparing weekly hours against episode completion percentages revealed the drop-off point",
     },
     predictive: {
-      question: "Will Bengaluru–Hyderabad fares rise before your planned September trip?",
-      prediction: "Demand predicted to surge 28% during conference season in September — fares will spike; book in the next 10 days",
-      confidence: "Based on 4 years of booking lead-time and event calendar data",
+      question: "Which shows are most likely to be renewed based on their viewing data?",
+      prediction: "Shows that reach the top 10 in 5+ countries in their first week have an 89% renewal rate — Beef qualifies on this metric",
+      confidence: "Based on 4 years of Netflix top-10 and renewal announcement data",
     },
     prescriptive: {
-      question: "How can you stop overpaying for flights?",
-      recommendation: "Book 14+ days ahead — your own history shows you paid 31% less on pre-planned trips vs last-minute ones",
-      expectedImpact: "You'd have saved ₹6,300 this year alone if you'd booked 14+ days out every time",
+      question: "How should Netflix schedule a new season to maximize viewership?",
+      recommendation: "Drop all episodes at once for drama, but weekly for reality — data shows drama binge-completion rates are 2.1× higher; reality shows generate 3× the social conversation with weekly drops",
+      expectedImpact: "Full-season drops for dramas reduce churn by 18% in the month of release",
     },
   },
 
-  gaming: {
+  shopping: {
     descriptive: {
-      headline: "You played 4.2 BGMI sessions per week this month — your top kill game was 8 frags",
-      detail: "your win rate is 12%, highest with M416 as your primary weapon",
-      metric: "4.2 sessions/week",
-      dimension: "your BGMI account",
-      period: "this month",
+      headline: "iPhone 15 Pro generated $2.1M in revenue in its first week of availability",
+      detail: "it had the lowest return rate (3.1%) of any electronics product that quarter — buyers were satisfied",
+      metric: "$2.1M revenue in week 1",
+      dimension: "Electronics category",
+      period: "Q4 2023",
     },
     diagnostic: {
-      problem: "Your win rate dropped from 12% to 7% after patch v2.5 — what happened?",
-      finding: "The M416 — your main weapon — was nerfed by 22% damage in that patch. Your kill rate dropped exactly in line.",
-      drillDown: "Segmenting your match results by 'primary weapon used' before and after the patch date made the damage clear",
+      problem: "Sony WH-1000XM5 headphones had a return rate of 14% in December — double the normal rate. Why?",
+      finding: "Filtering returns by 'reason_code' shows 71% cited 'poor fit/comfort' — the product page was missing sizing guidance added in the updated listing",
+      drillDown: "Joining return records with reason codes and return dates exposed the content gap",
     },
     predictive: {
-      question: "Are you at risk of losing your winning streak this month?",
-      prediction: "Based on your session frequency dropping below 2 in the last 14 days, your churn probability is currently 71%",
-      confidence: "Based on a retention model trained on 6 months of session logs",
+      question: "Which products are most likely to sell out before the holiday weekend?",
+      prediction: "AirPods Pro 2 are trending at 340% of their normal weekly velocity — stock is predicted to run out 4 days before Christmas at the current rate",
+      confidence: "Based on rolling 4-week sales velocity and current inventory levels",
     },
     prescriptive: {
-      question: "How can you get your win rate back up?",
-      recommendation: "Switch to Shotgun as your secondary — it wasn't nerfed, and your stats show a 24% higher close-range win rate when you use it",
-      expectedImpact: "Expected win rate recovery from 7% back to 10–11% within 2 weeks",
+      question: "How can we reduce return rates for high-value electronics?",
+      recommendation: "Add a 60-second 'Is this right for you?' quiz before checkout on products with >8% returns — similar implementations reduced returns by 22% on average",
+      expectedImpact: "Reducing returns from 14% to 9% on Sony headphones saves ~$180K annually in reverse logistics",
+    },
+  },
+
+  retail: {
+    descriptive: {
+      headline: "Standing desks sold 3,200 units in Q1 2024 — a 41% increase year-over-year",
+      detail: "the Home Office department now accounts for 18% of total store revenue, up from 11% two years ago",
+      metric: "3,200 units in Q1",
+      dimension: "Home Office department",
+      period: "Q1 2024",
+    },
+    diagnostic: {
+      problem: "Yoga Mat sales dropped 28% in February — despite strong January numbers. What happened?",
+      finding: "Filtering by store location shows the drop was isolated to 3 stores — all three had the Yoga Mats moved to a back aisle during a floor reset",
+      drillDown: "Segmenting sales by store ID and joining with planogram change dates pinpointed the cause",
+    },
+    predictive: {
+      question: "Which departments are likely to see the biggest sales lift next quarter?",
+      prediction: "Outdoor & Garden products historically spike 55% in weeks 10–16 — based on 4 years of seasonal data, this spring will follow the same pattern",
+      confidence: "Based on 4-year seasonal trend analysis by department",
+    },
+    prescriptive: {
+      question: "How should we set promotional discounts to maximize margin?",
+      recommendation: "Discount slow-moving items (>60 days in stock) by 15% rather than 30% — data shows 15% clears 80% of the same volume while protecting $12 more margin per unit",
+      expectedImpact: "Estimated $45K additional margin per quarter vs. the current blanket 30% clearance strategy",
     },
   },
 };
 
 export function getAnalyticsExample(flavorId: string): AnalyticsExample {
-  return FLAVOR_ANALYTICS_EXAMPLES[flavorId] ?? FLAVOR_ANALYTICS_EXAMPLES.cricket;
+  return FLAVOR_ANALYTICS_EXAMPLES[flavorId] ?? FLAVOR_ANALYTICS_EXAMPLES.baseball;
 }

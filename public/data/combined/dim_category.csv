@@ -1,0 +1,41 @@
+category_key,flavor_id,name,type,region,founded_year
+lad,baseball,LA Dodgers,NL West,"Los Angeles, CA",1883
+nyy,baseball,NY Yankees,AL East,"New York, NY",1903
+atl,baseball,Atlanta Braves,NL East,"Atlanta, GA",1871
+hou,baseball,Houston Astros,AL West,"Houston, TX",1962
+bos,baseball,Boston Red Sox,AL East,"Boston, MA",1901
+kc,nfl,Kansas City Chiefs,AFC West,"Kansas City, MO",1960
+bal,nfl,Baltimore Ravens,AFC North,"Baltimore, MD",1996
+buf,nfl,Buffalo Bills,AFC East,"Buffalo, NY",1960
+phi,nfl,Philadelphia Eagles,NFC East,"Philadelphia, PA",1933
+hou,nfl,Houston Texans,AFC South,"Houston, TX",2002
+dal,nfl,Dallas Cowboys,NFC East,"Dallas, TX",1960
+mia,nfl,Miami Dolphins,AFC East,"Miami, FL",1966
+mia,soccer,Inter Miami CF,Eastern Conference,"Miami, FL",2018
+tor,soccer,Toronto FC,Eastern Conference,"Toronto, ON",2006
+col,soccer,Columbus Crew,Eastern Conference,"Columbus, OH",1995
+lag,soccer,LA Galaxy,Western Conference,"Los Angeles, CA",1996
+chi,soccer,Chicago Fire FC,Eastern Conference,"Chicago, IL",1997
+orl,soccer,Orlando City SC,Eastern Conference,"Orlando, FL",2011
+pop,music,Pop,Genre,Global,1950
+hiphop,music,Hip-Hop/Rap,Genre,Global,1970
+latin,music,Latin,Genre,Global,1950
+rnb,music,R&B/Soul,Genre,Global,1940
+alt,music,Alternative/Indie,Genre,Global,1980
+country,music,Country,Genre,USA,1920
+scifi,netflix,Sci-Fi,Genre,Global,1950
+drama,netflix,Drama,Genre,Global,1930
+thriller,netflix,Thriller,Genre,Global,1920
+romance,netflix,Romance,Genre,Global,1930
+crime,netflix,Crime,Genre,Global,1930
+electronics,shopping,Electronics,Category,USA,1950
+audio,shopping,Audio,Category,USA,1960
+clothing,shopping,Clothing & Shoes,Category,USA,1900
+kitchen,shopping,Kitchen & Home,Category,USA,1900
+fitness,shopping,Fitness,Category,USA,1970
+grocery,retail,Grocery,Department,USA,1900
+electronics,retail,Electronics,Department,USA,1950
+clothing,retail,Clothing & Shoes,Department,USA,1900
+kitchen,retail,Kitchen,Department,USA,1900
+office,retail,Office Supplies,Department,USA,1950
+fitness,retail,Fitness & Sports,Department,USA,1970

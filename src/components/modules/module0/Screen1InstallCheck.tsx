@@ -104,16 +104,14 @@ export default function Screen1InstallCheck({ onNext }: ScreenProps) {
           {/* ── Left: Kaarani avatar ── */}
           <div className="flex flex-col items-center gap-4 md:pt-4 flex-shrink-0">
             <div
-              className="rounded-3xl flex items-center justify-center"
+              className="rounded-3xl overflow-hidden"
               style={{
                 backgroundColor: "#EFF6FF",
                 border: "2px solid #BFDBFE",
-                width: "200px",
-                height: "200px",
-                padding: "24px",
+                width: "240px",
               }}
             >
-              <KaaraniAvatar size={148} emotion={kaaraniEmotion} />
+              <KaaraniAvatar size={240} emotion={kaaraniEmotion} className="w-full h-auto" />
             </div>
             <div className="text-center">
               <p className="font-bold text-sm" style={{ color: "#111827" }}>Kaarani</p>

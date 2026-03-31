@@ -5,6 +5,7 @@ import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
+import { getPracticeData } from "@/data/practice-data";
 import { useBlockReveal } from "@/hooks/useBlockReveal";
 import { useSpeechContext } from "@/context/SpeechContext";
 
@@ -14,335 +15,71 @@ const KAARANI_TEXT =
 const KAARANI_HINT =
   "Think of it like this: data is the ingredients, information is the recipe, insight is the chef's intuition, and the decision is the dish you serve.";
 
-// ── YOUR raw data (personal activity log — one row per event) ──
-const RAW_DATA_TABLES: Record<string, { headers: string[]; rows: (string | number)[][] }> = {
-  music: {
-    headers: ["Date", "Song", "Artist", "Duration", "Skipped?"],
-    rows: [
-      ["12 Mar", "Tum Hi Ho", "Arijit Singh", "4:22", "No"],
-      ["12 Mar", "Kesariya", "Arijit Singh", "4:28", "No"],
-      ["13 Mar", "Raataan Lambiyan", "Jubin Nautiyal", "3:18", "No"],
-      ["13 Mar", "As It Was", "Harry Styles", "5:08", "Yes ⚠️"],
-      ["14 Mar", "Apna Bana Le", "Arijit Singh", "3:24", "No"],
-    ],
-  },
-  cricket: {
-    headers: ["Match Day", "Your Pick", "Role", "Points Earned", "Captain?"],
-    rows: [
-      ["GW 1", "Rohit Sharma", "Batsman", 54, "Yes"],
-      ["GW 2", "Rohit Sharma", "Batsman", 12, "Yes"],
-      ["GW 3", "Virat Kohli", "Batsman", 78, "Yes"],
-      ["GW 4", "Rohit Sharma", "Batsman", 6, "Yes ⚠️"],
-      ["GW 5", "KL Rahul", "Batsman", 44, "No"],
-    ],
-  },
-  football: {
-    headers: ["Gameweek", "Your Captain", "Fixture", "Pts Scored", "Home/Away"],
-    rows: [
-      ["GW 10", "Haaland", "City vs Chelsea", 18, "Home ✓"],
-      ["GW 11", "Salah", "Liverpool vs Arsenal", 12, "Home ✓"],
-      ["GW 12", "Saka", "City vs Arsenal", 2, "Away ⚠️"],
-      ["GW 13", "White", "Wolves vs Arsenal", 1, "Away ⚠️"],
-      ["GW 14", "Haaland", "City vs Spurs", 20, "Home ✓"],
-    ],
-  },
-  movies: {
-    headers: ["Date", "Film", "Genre", "Your Rating", "% You Watched"],
-    rows: [
-      ["5 Jan", "Pathaan", "Action", "⭐⭐⭐⭐⭐", "100%"],
-      ["12 Jan", "Jawan", "Action", "⭐⭐⭐⭐", "100%"],
-      ["19 Jan", "Tu Jhoothi…", "Romance", "⭐⭐⭐", "62% ⚠️"],
-      ["26 Jan", "Bholaa", "Action", "⭐⭐", "38% ⚠️"],
-      ["2 Feb", "Drishyam 2", "Thriller", "⭐⭐⭐⭐⭐", "100%"],
-    ],
-  },
-  ecommerce: {
-    headers: ["Order ID", "Date", "Item", "Amount (₹)", "Category"],
-    rows: [
-      ["#1041", "3 Oct", "Noise Earbuds", 1299, "Electronics"],
-      ["#1042", "8 Oct", "Shirt", 499, "Apparel"],
-      ["#1043", "15 Oct", "Python Book", 399, "Books"],
-      ["#1044", "21 Oct", "USB Hub", 849, "Electronics"],
-      ["#1045", "28 Oct", "Desk Lamp", 699, "Home"],
-    ],
-  },
-  food: {
-    headers: ["Date", "Restaurant", "Placed", "Delivered", "Your Rating"],
-    rows: [
-      ["Mon 6 Mar", "Biryani Blues", "12:30", "12:58", "⭐⭐⭐⭐⭐"],
-      ["Wed 8 Mar", "Pizza Hut", "19:15", "19:47", "⭐⭐⭐⭐"],
-      ["Sat 11 Mar", "Behrouz Biryani", "20:04", "20:53", "⭐⭐ ⚠️"],
-      ["Sun 12 Mar", "McDonald's", "19:30", "20:21", "⭐⭐ ⚠️"],
-      ["Tue 14 Mar", "Biryani Blues", "13:00", "13:24", "⭐⭐⭐⭐⭐"],
-    ],
-  },
-  stocks: {
-    headers: ["Stock", "You Bought", "Buy Price", "Today", "Your Return"],
-    rows: [
-      ["RELIANCE", "Jan 2023", "₹2,480", "₹2,910", "+17.3% ✓"],
-      ["TCS", "Jan 2023", "₹3,340", "₹3,230", "−3.3% ⚠️"],
-      ["INFY", "Jan 2023", "₹1,540", "₹1,380", "−10.4% ⚠️"],
-      ["HDFC", "Mar 2023", "₹1,580", "₹1,920", "+21.5% ✓"],
-      ["WIPRO", "Jan 2023", "₹410", "₹360", "−12.2% ⚠️"],
-    ],
-  },
-  healthcare: {
-    headers: ["Your Visit", "Dept", "Arrived", "Seen At", "Your Wait"],
-    rows: [
-      ["3 Oct", "General", "09:15", "09:33", "18 min ✓"],
-      ["18 Nov", "Cardiology", "10:00", "10:22", "22 min ✓"],
-      ["7 Dec", "General", "16:30", "17:04", "34 min"],
-      ["14 Jan", "Cardiology", "22:10", "22:51", "41 min ⚠️"],
-      ["22 Jan", "General", "21:45", "22:34", "49 min ⚠️"],
-    ],
-  },
-  travel: {
-    headers: ["Flight", "Route", "Booked", "Days Ahead", "Fare Paid (₹)"],
-    rows: [
-      ["6E-204", "BLR→DEL", "1 Jan", 21, "3,800 ✓"],
-      ["AI-302", "BOM→DEL", "10 Feb", 18, "4,200 ✓"],
-      ["6E-410", "DEL→BOM", "2 Mar", 3, "7,100 ⚠️"],
-      ["SG-101", "HYD→BOM", "5 Apr", 1, "8,400 ⚠️"],
-      ["6E-204", "BLR→DEL", "20 May", 16, "3,900 ✓"],
-    ],
-  },
-  gaming: {
-    headers: ["Date", "Match", "Kills", "Won?", "Weapon Used"],
-    rows: [
-      ["1 Oct", "Match 41", 5, "Yes ✓", "M416"],
-      ["1 Oct", "Match 42", 3, "No", "M416"],
-      ["2 Oct", "Match 43", 7, "Yes ✓", "M416"],
-      ["2 Oct", "Match 44", 1, "No ⚠️", "AKM"],
-      ["3 Oct", "Match 45", 2, "No ⚠️", "AKM"],
-    ],
-  },
-};
-
-// ── YOUR information table (same data grouped — patterns emerge) ──
-const INFO_TABLES: Record<string, { headers: string[]; rows: (string | number)[][] }> = {
-  music: {
-    headers: ["Your Top Artist", "Times You Played", "Avg Length", "% You Completed"],
-    rows: [
-      ["Arijit Singh", 340, "3:48", "91% ✓"],
-      ["Jubin Nautiyal", 112, "3:55", "88% ✓"],
-      ["Harry Styles", 43, "5:12", "31% ⚠️"],
-    ],
-  },
-  cricket: {
-    headers: ["Player You Picked", "Times Captained", "Avg Points", "Best Week"],
-    rows: [
-      ["Rohit Sharma", 18, 38, 54],
-      ["Virat Kohli", 9, 62, 78],
-      ["KL Rahul", 5, 41, 52],
-    ],
-  },
-  football: {
-    headers: ["Your Captain Pick", "Times Chosen", "Avg Pts", "Home Avg / Away Avg"],
-    rows: [
-      ["Haaland", 12, 15.2, "18.4 / 6.1"],
-      ["Salah", 7, 11.8, "14.2 / 8.4"],
-      ["Saka", 5, 6.4, "9.2 / 2.1 ⚠️"],
-    ],
-  },
-  movies: {
-    headers: ["Genre You Watch", "Films", "Avg Your Rating", "% You Finish"],
-    rows: [
-      ["Action", 36, "4.4 ⭐", "97% ✓"],
-      ["Thriller", 18, "4.1 ⭐", "89% ✓"],
-      ["Romance", 14, "3.2 ⭐", "54% ⚠️"],
-    ],
-  },
-  ecommerce: {
-    headers: ["Your Category", "Your Orders", "Your Spend (₹)", "Avg Order (₹)"],
-    rows: [
-      ["Electronics", 8, "14,800", "1,850"],
-      ["Apparel", 12, "6,200", "517"],
-      ["Books", 9, "3,100", "344"],
-    ],
-  },
-  food: {
-    headers: ["When You Order", "Avg Wait (min)", "Your Avg Rating"],
-    rows: [
-      ["Weekday lunch", 26, "4.4 ✓"],
-      ["Weekday dinner", 32, "4.1 ✓"],
-      ["Weekend evening", 51, "2.8 ⚠️"],
-    ],
-  },
-  stocks: {
-    headers: ["Your Sector", "Your Holdings", "Your Return", "% of Portfolio"],
-    rows: [
-      ["Energy", "RELIANCE", "+17.3% ✓", "28%"],
-      ["Banking", "HDFC", "+21.5% ✓", "24%"],
-      ["IT", "TCS, INFY, WIPRO", "−8.6% ⚠️", "42%"],
-    ],
-  },
-  healthcare: {
-    headers: ["Time You Visited", "Your Avg Wait", "Staff on Shift"],
-    rows: [
-      ["Morning (9–12)", "20 min ✓", "10–12"],
-      ["Afternoon (12–5)", "28 min", "8–10"],
-      ["Evening / Night ⚠️", "45 min ⚠️", "5–7"],
-    ],
-  },
-  travel: {
-    headers: ["Days Ahead You Booked", "Trips", "Avg Fare (₹)"],
-    rows: [
-      ["15+ days ✓", 5, "3,960"],
-      ["7–14 days", 2, "5,800"],
-      ["Under 7 days ⚠️", 3, "7,967 ⚠️"],
-    ],
-  },
-  gaming: {
-    headers: ["Weapon You Used", "Matches", "Avg Kills", "Your Win Rate"],
-    rows: [
-      ["M416", 38, 4.8, "18% ✓"],
-      ["AKM", 14, 2.1, "7% ⚠️"],
-      ["Shotgun", 6, 5.2, "22% ✓"],
-    ],
-  },
-};
-
-// ── YOUR insight table (the "why" pattern in your own data) ──
-const INSIGHT_TABLES: Record<string, { headers: string[]; rows: (string | number)[][] }> = {
-  music: {
-    headers: ["Track Length", "Your Completion Rate", "What This Means"],
-    rows: [
-      ["Under 3:30 ✓", "94%", "You always finish these"],
-      ["3:30 – 5:00", "61%", "Hit or miss"],
-      ["Over 5:00 ⚠️", "31%", "You skip most of these"],
-    ],
-  },
-  cricket: {
-    headers: ["Match Situation", "Your Avg Points (Rohit)", "Result"],
-    rows: [
-      ["Batting First ✓", 62, "Consistent scorer"],
-      ["Chasing ⚠️", 18, "Big points drain"],
-    ],
-  },
-  football: {
-    headers: ["Captain Fixture Type", "Your Avg Points", "Verdict"],
-    rows: [
-      ["Home fixture ✓", 16.8, "Captain here always"],
-      ["Away fixture ⚠️", 4.2, "Never captain away"],
-    ],
-  },
-  movies: {
-    headers: ["Film Type", "Your Avg Rating", "% You Finish"],
-    rows: [
-      ["Sequel / Known IP ✓", "4.6 ⭐", "98%"],
-      ["Original script ⚠️", "3.1 ⭐", "49%"],
-    ],
-  },
-  ecommerce: {
-    headers: ["Cart Status at Checkout", "What Happened", "Times"],
-    rows: [
-      ["All items in stock ✓", "Purchased", "39"],
-      ["1+ item out of stock ⚠️", "Abandoned", "8"],
-    ],
-  },
-  food: {
-    headers: ["Your Delivery Time", "Your Rating", "Pattern"],
-    rows: [
-      ["Under 40 min ✓", "4.3 avg", "Happy customer"],
-      ["Over 40 min ⚠️", "2.7 avg", "Low rating every time"],
-    ],
-  },
-  stocks: {
-    headers: ["When US Rates Rose ≥0.5%", "Your IT Return", "Your Energy Return"],
-    rows: [
-      ["Q2 2023 (2 hikes) ⚠️", "−12.1%", "+6.4%"],
-      ["Q3 2023 (no hike) ✓", "+4.8%", "+9.1%"],
-    ],
-  },
-  healthcare: {
-    headers: ["Your Visit Time", "Your Wait", "vs Your Best"],
-    rows: [
-      ["Morning weekday ✓", "20 min", "best"],
-      ["Weekend evening ⚠️", "45 min", "+125% longer"],
-    ],
-  },
-  travel: {
-    headers: ["Your Booking Lead Time", "Avg Fare You Paid", "vs Best Price"],
-    rows: [
-      ["15+ days ahead ✓", "₹3,960", "best price"],
-      ["Under 7 days ⚠️", "₹7,967", "+101% more!"],
-    ],
-  },
-  gaming: {
-    headers: ["Pre / Post Patch v2.5", "Your Win Rate", "Your Avg Kills"],
-    rows: [
-      ["Before patch ✓", "18%", "4.8 (M416)"],
-      ["After patch ⚠️", "7%", "2.1 (M416 nerfed)"],
-    ],
-  },
-};
-
 const FLAVOR_LADDER: Record<
   string,
   { information: string; insight: string; decision: string }
 > = {
-  cricket: {
-    information: "You picked Rohit Sharma 18 times — he averaged 42.3 in your fantasy team",
-    insight: "Your team lost points every week you picked Rohit as captain in chasing innings",
-    decision: "Only captain Rohit in batting-first matches — your data proves he's 60% more effective",
+  baseball: {
+    information: "LA Dodgers lead with 312 total hits across 99 games — NY Yankees 2nd with 226",
+    insight: "Postponed game rows record 0 hits but still count as games — they pull down team averages",
+    decision: "Filter to status = 'Played' only — team hit averages jump by 26%",
   },
-  football: {
-    information: "Your FPL team averaged 68 points per gameweek — Haaland scored in 14 of 20 weeks",
-    insight: "Your rank crashes every time you captain a defender in an away fixture",
-    decision: "Switch to Haaland as captain for all home fixtures — guaranteed upside",
+  nfl: {
+    information: "Kansas City Chiefs lead with 2,780 total passing yards — Houston Texans 2nd with 2,170",
+    insight: "Bye-week rows record 0 yards but count as game weeks — they drag down per-game averages",
+    decision: "Filter to status = 'Played' only — KC Chiefs average rises from 309 to 371 yards per game",
   },
-  movies: {
-    information: "You watched 94 films — Action is your #1 genre with 38% of your watch time",
-    insight: "You finish 94% of action sequels but only 41% of original scripts",
-    decision: "Prioritise sequels and franchise films on your watchlist — you'll actually finish them",
-  },
-  ecommerce: {
-    information: "You spent ₹28,400 this year — Electronics drove 52% of your total in just 3 orders",
-    insight: "All 8 of your abandoned carts had at least one out-of-stock item at checkout",
-    decision: "Enable wishlist alerts — buy Electronics when they're back in stock, not when they sell out on you",
-  },
-  food: {
-    information: "You ordered 89 times — Biryani is your #1 dish, ordered 23 times this year",
-    insight: "Every time you rated less than 3 stars, the order arrived after 7 PM on a weekend",
-    decision: "Order before 6 PM on weekends — you'll get food 22 minutes faster and actually enjoy it",
-  },
-  stocks: {
-    information: "Your portfolio grew 18.4% — Reliance was your best performer at +22%",
-    insight: "Every time US interest rates rose 0.5%+, your IT stocks dropped 12%+ within 2 weeks",
-    decision: "Trim IT holdings by 8% whenever the Fed signals a rate hike — your own data backs this",
-  },
-  healthcare: {
-    information: "Your average wait time is 22 minutes on weekdays — but 41 minutes in January",
-    insight: "Every long wait you experienced was on a weekend evening with fewer than 6 night-shift staff",
-    decision: "Book morning slots on Tuesdays or Wednesdays — you'll wait 23 minutes less on average",
+  soccer: {
+    information: "Inter Miami CF lead with 23 total goals — LA Galaxy 2nd with 19 across the dataset",
+    insight: "Postponed match rows record 0 goals but count as matches played, shrinking per-match averages",
+    decision: "Filter to status = 'Played' — Inter Miami's goals-per-match improves from 0.65 to 0.9",
   },
   music: {
-    information: "You played 2,847 songs — Arijit Singh topped your chart with 340 plays",
-    insight: "You skip 76% of tracks over 5 minutes — but complete 94% of tracks under 3:30",
-    decision: "Build your Focus playlist from tracks under 3:30 — your completion rate jumps from 34% to 71%",
+    information: "R&B/Soul leads with 12,098M total streams — more than double Hip-Hop/Rap (6,217M)",
+    insight: "TEST-status rows are QA entries with placeholder values — they inflate stream totals",
+    decision: "Filter out TEST rows in Power Query — totals reflect only real listener activity",
   },
-  travel: {
-    information: "You took 8 flights — Delhi–Mumbai was your most flown route at 3 times",
-    insight: "Your 3 last-minute bookings cost you ₹2,100 more each than your pre-planned trips",
-    decision: "Book 14+ days ahead — you'd have saved ₹6,300 this year based on your own booking history",
+  netflix: {
+    information: "Drama leads with 16,045M hours watched — triple the next genre (Thriller at 5,493M)",
+    insight: "Shows with null ratings are new releases — averaging them in pulls the genre score down",
+    decision: "Exclude null ratings from averages — the score then reflects only shows with real ratings",
   },
-  gaming: {
-    information: "You average 4.2 sessions/week — your best kill game was 8 frags with M416",
-    insight: "Your win rate dropped from 12% to 7% the week the M416 was nerfed in patch v2.5",
-    decision: "Switch to Shotgun as your secondary — it wasn't nerfed and your close-range stats are strong",
+  shopping: {
+    information: "Electronics leads with $236,798 total revenue — 3× higher than Audio ($156,516)",
+    insight: "TEST-status rows are fake QA orders — $50,000 placeholders that inflate revenue totals",
+    decision: "Filter to status = 'Active' only — revenue figures become accurate and reportable",
+  },
+  retail: {
+    information: "Clothing & Shoes leads with 78,068 units sold — nearly double Kitchen (40,160 units)",
+    insight: "TEST-status rows use 9,999-unit placeholders with $0 margin — they distort every aggregate",
+    decision: "Filter to status = 'Active' only — unit counts and margins reflect real store sales",
   },
 };
 
-const DEFAULT_LADDER = FLAVOR_LADDER.cricket;
+const DEFAULT_LADDER = FLAVOR_LADDER.baseball;
 
 export default function Screen2WhatIsData({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
   const { selectedFlavor, unlockVoice } = useKaarani();
   const { speak } = useSpeechContext();
   const flavor = getFlavorById(selectedFlavor);
   const ladder = FLAVOR_LADDER[selectedFlavor] ?? DEFAULT_LADDER;
-  const rawTable = RAW_DATA_TABLES[selectedFlavor] ?? RAW_DATA_TABLES.cricket;
-  const infoTable = INFO_TABLES[selectedFlavor] ?? INFO_TABLES.cricket;
-  const insightTable = INSIGHT_TABLES[selectedFlavor] ?? INSIGHT_TABLES.cricket;
+  const practiceData = getPracticeData(selectedFlavor);
+
+  // Build display tables from practice data using flavor-specific labels
+  const rawTable = {
+    headers: ["Date", flavor.dimension1Label, flavor.dimension2Label, flavor.metric1Label, flavor.metric2Label, "Status"],
+    rows: practiceData.rawRows.map(r => [r.date, r.entity_name, r.category_name, r.metric1 ?? "—", r.metric2 ?? "—", r.status]),
+  };
+  const infoTable = {
+    headers: [flavor.dimension2Label, `Total ${flavor.metric1Label}`, `Avg ${flavor.metric2Label}`, "Count"],
+    rows: [...practiceData.groupedRows]
+      .sort((a, b) => b.total_metric1 - a.total_metric1)
+      .map(r => [r.category_name, r.total_metric1, r.avg_metric2 ?? "—", r.row_count]),
+  };
+  const insightTable = {
+    headers: ["Pattern", "Value", "What This Means"],
+    rows: practiceData.insightRows.map(r => [r.label, r.value, r.interpretation]),
+  };
 
   // 6 blocks: header(0) + 4 steps(1-4) + callout(5)
   const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(6);
