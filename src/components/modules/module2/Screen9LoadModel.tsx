@@ -6,7 +6,6 @@ import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { getFlavorDataset } from "@/data/module2";
 import { ScreenHeader } from "@/components/ui/ScreenSection";
-import { Placeholder } from "@/components/ui/Placeholder";
 import { useBlockReveal } from "@/hooks/useBlockReveal";
 import { useSpeechContext } from "@/context/SpeechContext";
 
@@ -99,7 +98,18 @@ export default function Screen9LoadModel({ onNext, onPrev, screenIndex, totalScr
             </div>
           </div>
 
-          <Placeholder type="animation" label="[Animation: Close & Apply button → loading progress bar → fields appear in report pane]" height="100px" />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="text-xs font-bold mb-1 text-center" style={{ color: "#6B7280" }}>Applied Steps — your recipe</p>
+              <img src="/screenshots/m2-applied-steps.png" alt="Applied Steps panel in Power Query"
+                className="w-full rounded-xl border" style={{ borderColor: "#E5E7EB" }} />
+            </div>
+            <div>
+              <p className="text-xs font-bold mb-1 text-center" style={{ color: "#6B7280" }}>Close &amp; Apply to load</p>
+              <img src="/screenshots/m2-close-apply.png" alt="Close and Apply button in Power Query"
+                className="w-full rounded-xl border" style={{ borderColor: "#E5E7EB" }} />
+            </div>
+          </div>
         </div>
 
         {/* Tap to reveal */}

@@ -82,6 +82,8 @@ export default function Screen7FilterRows({ onNext, onPrev, screenIndex, totalSc
             ))}
           </div>
 
+          <img src="/screenshots/m2-filter-rows.png" alt="Filter rows dropdown in Power Query"
+            className="w-full rounded-xl border mb-4" style={{ borderColor: "#E5E7EB" }} />
           <div className="grid grid-cols-2 gap-3">
             {[
               { label: "Remove rows where column = value", example: "Volume = 0", icon: "" },

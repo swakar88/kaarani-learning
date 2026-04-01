@@ -110,7 +110,7 @@ export default function Screen3PowerQueryTour({ onNext, onPrev, screenIndex, tot
               {/* Applied steps */}
               <div className="flex flex-col p-2 border-l" style={{ width: "24%", backgroundColor: "#F9FAFB", borderColor: "#E5E7EB" }}>
                 <span className="text-[9px] font-black uppercase tracking-wider mb-2" style={{ color: "#1E40AF" }}>④ Applied Steps</span>
-                {["Source", "Changed Type", "Removed Nulls"].map((s, i) => (
+                {["Source", "Changed Type", "Removed Nulls"].map((s) => (
                   <div key={s} className="text-[8px] px-2 py-1 rounded mb-1 flex items-center gap-1" style={{ backgroundColor: "#FFFFFF", color: "#374151", border: "1px solid #E5E7EB" }}>
                     <span style={{ color: "#2563EB" }}>▸</span> {s}
                   </div>
@@ -123,7 +123,9 @@ export default function Screen3PowerQueryTour({ onNext, onPrev, screenIndex, tot
               <span className="text-[8px] font-mono flex-1 px-2 py-0.5 rounded" style={{ backgroundColor: "#FFFFFF", color: "#6B7280", border: "1px solid #E5E7EB" }}>= Table.RemoveRowsWithErrors(#"Changed Type")</span>
             </div>
           </div>
-          <p className="text-xs text-center mt-2" style={{ color: "#9CA3AF" }}>Real annotated screenshot coming — tap each zone below to learn what it does</p>
+          <img src="/screenshots/m2-raw-data.png" alt="Real Power Query Editor with messy data loaded"
+            className="w-full rounded-xl mt-3 border" style={{ borderColor: "#E5E7EB" }} />
+          <p className="text-xs text-center mt-1" style={{ color: "#9CA3AF" }}>The real Power Query Editor — tap each zone below to learn what it does</p>
         </div>
 
         {/* Block 2 — Zone buttons and detail */}

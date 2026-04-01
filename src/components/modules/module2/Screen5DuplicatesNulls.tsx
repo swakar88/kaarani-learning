@@ -69,6 +69,8 @@ export default function Screen5DuplicatesNulls({ onNext, onPrev, screenIndex, to
                 <p className="text-sm font-semibold" style={{ color: "#111827" }}>{dupeIssue.issue}</p>
                 <p className="text-xs mt-1.5" style={{ color: "#2563EB" }}> Fix: {dupeIssue.fix}</p>
               </div>
+              <img src="/screenshots/m2-remove-duplicates.png" alt="Remove Duplicates in Power Query"
+                className="w-full rounded-xl border mb-3" style={{ borderColor: "#E5E7EB" }} />
               <div className="rounded-2xl p-4" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}>
                 <p className="text-sm font-bold mb-2" style={{ color: "#111827" }}>How to remove in Power Query:</p>
                 <ol className="flex flex-col gap-1.5">
@@ -85,6 +87,18 @@ export default function Screen5DuplicatesNulls({ onNext, onPrev, screenIndex, to
 
           {tab === "nulls" && (
             <div className="animate-fade-in-up flex flex-col gap-4">
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div>
+                  <p className="text-xs font-bold mb-1 text-center" style={{ color: "#6B7280" }}>Column quality view</p>
+                  <img src="/screenshots/m2-null-count.png" alt="Column quality showing null count"
+                    className="w-full rounded-xl border" style={{ borderColor: "#E5E7EB" }} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold mb-1 text-center" style={{ color: "#6B7280" }}>Replace Values dialog</p>
+                  <img src="/screenshots/m2-replace-nulls.png" alt="Replace Values dialog for nulls"
+                    className="w-full rounded-xl border" style={{ borderColor: "#E5E7EB" }} />
+                </div>
+              </div>
               <div className="rounded-2xl p-4" style={{ backgroundColor: "#FFFFFF", border: "2px solid #E8E8E8" }}>
                 <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#2563EB" }}>Issue in our dataset</p>
                 <p className="text-sm font-semibold" style={{ color: "#111827" }}>{nullIssue.issue}</p>

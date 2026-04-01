@@ -98,6 +98,8 @@ export default function Screen2DataSources({ onNext, onPrev, screenIndex, totalS
 
         {/* Block 3 — In Power BI Desktop instructions */}
         <div className={`${blockClass(3)} mb-4`}>
+          <img src="/screenshots/m2-get-data.png" alt="Get Data dialog in Power BI Desktop"
+            className="w-full rounded-2xl mb-3 border" style={{ borderColor: "#E5E7EB" }} />
           <div className="rounded-2xl p-4 mb-3" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E8E8E8" }}>
             <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: M_COLOR }}>In Power BI Desktop</p>
             <p className="text-sm mb-3" style={{ color: "#111827" }}>
