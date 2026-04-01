@@ -55,6 +55,8 @@ const VOICE_PRIORITY = [
   "Microsoft Roger Online (Natural)",
   "Microsoft Steffan Online (Natural)",
   "Microsoft Davis Online (Natural)",
+  "Microsoft Ryan Online (Natural)",
+  "Microsoft Brandon Online (Natural)",
   "Microsoft Andrew",
   "Microsoft Guy",
   // Chrome on Windows
@@ -76,9 +78,10 @@ function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null 
     const match = voices.find(v => v.name.includes(name) && v.lang.startsWith("en"));
     if (match) return match;
   }
-  // Last resort: any English male voice, then any English voice
+  // Last resort: male first, then any non-female English, then any English
   return (
     voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("male")) ??
+    voices.find(v => v.lang.startsWith("en") && !v.name.toLowerCase().includes("female")) ??
     voices.find(v => v.lang.startsWith("en")) ??
     null
   );
@@ -105,6 +108,13 @@ export function useSpeech(): UseSpeechReturn {
   // Normalize text so TTS pronounces abbreviations and acronyms correctly
 function normalizeForTTS(text: string): string {
   return text
+    // Strip arrows and symbols TTS reads literally (e.g. "right pointing arrow")
+    .replace(/→|►|▸|»|←|◄|▴|▾/g, "")
+    // Strip all non-ASCII characters (emoji, special Unicode symbols)
+    .replace(/[^\x00-\x7F]/g, " ")
+    // Collapse any double spaces left behind
+    .replace(/\s{2,}/g, " ")
+    .trim()
     .replace(/Kaarani/g, "Kaa-Rah-Ni")
     .replace(/Power BI/g, "Power B.I.")
     .replace(/\bBI\b/g, "B.I.")
