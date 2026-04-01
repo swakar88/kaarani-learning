@@ -46,7 +46,7 @@ export function KaaraniAvatar({
   if (!isActive) {
     return (
       <Image
-        src="/avatar/Kaarani Tutor.png"
+        src="/avatar/Kaarani_Tutor.png"
         alt="Kaarani"
         width={isFluid ? 240 : size}
         height={isFluid ? 240 : size}
