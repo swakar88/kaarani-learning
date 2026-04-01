@@ -19,7 +19,7 @@ export default function Screen8FilterContext({ onNext, onPrev, screenIndex, tota
   const [slicerTeam, setSlicerTeam] = useState<string | null>(null);
   const [slicerYear, setSlicerYear] = useState<string | null>(null);
 
-  const TEAMS = [flavor.dimension2Label === "Team" ? "Mumbai Indians" : "Category A", "Category B", "Category C"];
+  const TEAMS = [flavor.dimension2Label === "Team" ? "New York Yankees" : "Category A", "Category B", "Category C"];
   const YEARS = ["2021", "2022", "2023"];
 
   const base = 847;

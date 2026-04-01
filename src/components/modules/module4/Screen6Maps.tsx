@@ -15,7 +15,7 @@ const MAP_TYPES = [
   { label: "Map (Bubble)", icon: "", desc: "Circles on a map. Size = metric value. Best for city/point data.", fields: "Location + Size + Colour" },
   { label: "Filled Map", icon: "", desc: "Shaded regions. Best for country/state/district boundaries.", fields: "Location + Colour saturation" },
   { label: "Azure Maps", icon: "", desc: "Advanced mapping with layers, heatmaps, and custom tiles. Needs Azure account.", fields: "Location + Colour + Size + Tooltip" },
-  { label: "Shape Map", icon: "", desc: "Custom geography shapes (e.g. sales territories, cricket zones).", fields: "Location key + Colour saturation" },
+  { label: "Shape Map", icon: "", desc: "Custom geography shapes (e.g. sales territories, custom regions).", fields: "Location key + Colour saturation" },
 ];
 
 export default function Screen6Maps({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
@@ -23,7 +23,7 @@ export default function Screen6Maps({ onNext, onPrev, screenIndex, totalScreens 
   const { speak } = useSpeechContext();
   const flavor = getFlavorById(selectedFlavor);
 
-  const hasGeoStory = ["travel", "ecommerce", "food", "healthcare"].includes(selectedFlavor);
+  const hasGeoStory = ["shopping", "retail"].includes(selectedFlavor);
 
   const { step, next, isComplete, blockClass, tapLabel } = useBlockReveal(hasGeoStory ? 4 : 3);
 
@@ -69,10 +69,8 @@ export default function Screen6Maps({ onNext, onPrev, screenIndex, totalScreens 
           <div className={`${blockClass(3)} rounded-xl p-3 mb-4`} style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
             <p className="text-xs font-bold mb-1" style={{ color: "#2563EB" }}>{flavor.label} map use case</p>
             <p className="text-xs" style={{ color: "#111827" }}>
-              {selectedFlavor === "travel" && "Plot booking volumes by origin city — bubble map with city = Location, bookings = Size"}
-              {selectedFlavor === "ecommerce" && "Filled map of India — state-level revenue shown as colour intensity"}
-              {selectedFlavor === "food" && "Bubble map of restaurant locations — size = orders, colour = average rating"}
-              {selectedFlavor === "healthcare" && "State-level filled map — admissions per lakh population as colour scale"}
+              {selectedFlavor === "shopping" && "Filled map showing state-level revenue — colour intensity = total sales per state"}
+              {selectedFlavor === "retail" && "Bubble map of store locations — size = units sold, colour = margin"}
             </p>
           </div>
         )}

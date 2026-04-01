@@ -220,3 +220,17 @@ export function CodeBlock({ code, label }: CodeBlockProps) {
     </div>
   );
 }
+
+// ─── ScreenshotNote ──────────────────────────────────────────────────────────
+export function ScreenshotNote({ flavorLabel, hint }: { flavorLabel: string; hint: string }) {
+  return (
+    <div className="flex items-start gap-2 mt-2 mb-1 px-3 py-2 rounded-xl"
+      style={{ backgroundColor: "#FFFBEB", border: "1px solid #FDE68A" }}>
+      <span className="text-xs flex-shrink-0" style={{ color: "#92400E" }}>&#128248;</span>
+      <p className="text-xs leading-snug" style={{ color: "#92400E" }}>
+        <strong>Generic screenshot</strong> &middot; In your <strong>{flavorLabel}</strong> dataset, {hint}
+      </p>
+    </div>
+  );
+}
+

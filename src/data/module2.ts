@@ -8,7 +8,7 @@ export interface FlavorDataset {
   rows: string;
   source: string;
   columns: string[];
-  issues: { issue: string; fix: string }[];
+  issues: { issue: string; fix: string; column?: string }[];
   sampleRow: Record<string, string>;
 }
 
@@ -21,10 +21,10 @@ export const FLAVOR_DATASETS: Record<string, FlavorDataset> = {
     source: "Kaarani sample dataset",
     columns: ["date", "player_name", "team_name", "hits", "home_runs", "status", "notes"],
     issues: [
-      { issue: "'hits' column contains text like '3 hits' in some rows (wrong data type)", fix: "Transform → Replace Values to remove ' hits', then Change Type → Whole Number" },
-      { issue: "~8% of 'home_runs' rows are blank/null", fix: "Replace null → 0 for numeric calculations" },
-      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates" },
-      { issue: "Rows with status = 'Postponed' skew averages", fix: "Filter Rows → Keep where status = 'Played'" },
+      { issue: "'hits' column contains text like '3 hits' in some rows (wrong data type)", fix: "Transform → Replace Values to remove ' hits', then Change Type → Whole Number", column: "hits" },
+      { issue: "~8% of 'home_runs' rows are blank/null", fix: "Replace null → 0 for numeric calculations", column: "home_runs" },
+      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates", column: "player_name" },
+      { issue: "Rows with status = 'Postponed' skew averages", fix: "Filter Rows → Keep where status = 'Played'", column: "status" },
     ],
     sampleRow: {
       date: "2022-04-07",
@@ -44,10 +44,10 @@ export const FLAVOR_DATASETS: Record<string, FlavorDataset> = {
     source: "Kaarani sample dataset",
     columns: ["date", "player_name", "team_name", "pass_yards", "touchdowns", "status", "notes"],
     issues: [
-      { issue: "'pass_yards' stored as text in some rows (e.g. '312 yds')", fix: "Replace Values to strip ' yds', then Change Type → Whole Number" },
-      { issue: "~8% of 'touchdowns' rows are blank/null", fix: "Replace null → 0" },
-      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates" },
-      { issue: "Bye-week rows with status = 'Bye' included in averages", fix: "Filter Rows → Keep where status = 'Played'" },
+      { issue: "'pass_yards' stored as text in some rows (e.g. '312 yds')", fix: "Replace Values to strip ' yds', then Change Type → Whole Number", column: "pass_yards" },
+      { issue: "~8% of 'touchdowns' rows are blank/null", fix: "Replace null → 0", column: "touchdowns" },
+      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates", column: "player_name" },
+      { issue: "Bye-week rows with status = 'Bye' included in averages", fix: "Filter Rows → Keep where status = 'Played'", column: "status" },
     ],
     sampleRow: {
       date: "2022-09-08",
@@ -67,10 +67,10 @@ export const FLAVOR_DATASETS: Record<string, FlavorDataset> = {
     source: "Kaarani sample dataset",
     columns: ["date", "player_name", "club_name", "goals", "assists", "status", "notes"],
     issues: [
-      { issue: "'goals' column contains text like '2 goals' in some rows", fix: "Replace Values to strip ' goals', then Change Type → Whole Number" },
-      { issue: "~8% of 'assists' rows are blank/null", fix: "Replace null → 0" },
-      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates" },
-      { issue: "Rows with status = 'Postponed' should be excluded", fix: "Filter Rows → Keep where status = 'Played'" },
+      { issue: "'goals' column contains text like '2 goals' in some rows", fix: "Replace Values to strip ' goals', then Change Type → Whole Number", column: "goals" },
+      { issue: "~8% of 'assists' rows are blank/null", fix: "Replace null → 0", column: "assists" },
+      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates", column: "player_name" },
+      { issue: "Rows with status = 'Postponed' should be excluded", fix: "Filter Rows → Keep where status = 'Played'", column: "status" },
     ],
     sampleRow: {
       date: "2023-03-04",
@@ -90,10 +90,10 @@ export const FLAVOR_DATASETS: Record<string, FlavorDataset> = {
     source: "Kaarani sample dataset",
     columns: ["week_start", "artist_name", "genre_name", "streams_millions", "chart_position", "status", "notes"],
     issues: [
-      { issue: "'streams_millions' stored as text like '142.3 M' in some rows", fix: "Replace ' M' → '', then Change Type → Decimal Number" },
-      { issue: "~8% of 'chart_position' rows are null (charted but position unranked)", fix: "Replace null → 999 as a sentinel, or exclude from ranking analysis" },
-      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates" },
-      { issue: "Rows with status = 'TEST' are internal QA rows", fix: "Filter Rows → Remove where status = 'TEST'" },
+      { issue: "'streams_millions' stored as text like '142.3 M' in some rows", fix: "Replace ' M' → '', then Change Type → Decimal Number", column: "streams_millions" },
+      { issue: "~8% of 'chart_position' rows are null (charted but position unranked)", fix: "Replace null → 999 as a sentinel, or exclude from ranking analysis", column: "chart_position" },
+      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates", column: "artist_name" },
+      { issue: "Rows with status = 'TEST' are internal QA rows", fix: "Filter Rows → Remove where status = 'TEST'", column: "status" },
     ],
     sampleRow: {
       week_start: "2022-10-21",
@@ -113,10 +113,10 @@ export const FLAVOR_DATASETS: Record<string, FlavorDataset> = {
     source: "Kaarani sample dataset",
     columns: ["week_start", "show_name", "genre_name", "hours_watched_millions", "rating", "status", "notes"],
     issues: [
-      { issue: "'hours_watched_millions' stored as text like '134.5 M' in some rows", fix: "Replace ' M' → '', then Change Type → Decimal Number" },
-      { issue: "~8% of 'rating' rows are null (new shows with no rating yet)", fix: "Replace null → 0 or exclude from average rating calculations" },
-      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates" },
-      { issue: "Rows with status = 'TEST' are internal QA rows", fix: "Filter Rows → Remove where status = 'TEST'" },
+      { issue: "'hours_watched_millions' stored as text like '134.5 M' in some rows", fix: "Replace ' M' → '', then Change Type → Decimal Number", column: "hours_watched_millions" },
+      { issue: "~8% of 'rating' rows are null (new shows with no rating yet)", fix: "Replace null → 0 or exclude from average rating calculations", column: "rating" },
+      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates", column: "show_name" },
+      { issue: "Rows with status = 'TEST' are internal QA rows", fix: "Filter Rows → Remove where status = 'TEST'", column: "status" },
     ],
     sampleRow: {
       week_start: "2022-05-27",
@@ -136,10 +136,10 @@ export const FLAVOR_DATASETS: Record<string, FlavorDataset> = {
     source: "Kaarani sample dataset",
     columns: ["week_start", "product_name", "category_name", "revenue_dollars", "returns", "status", "notes"],
     issues: [
-      { issue: "'revenue_dollars' stored as text like '$2,100' in some rows", fix: "Replace '$' and ',' → '', then Change Type → Decimal Number" },
-      { issue: "~8% of 'returns' rows are blank/null", fix: "Replace null → 0" },
-      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates" },
-      { issue: "Rows with status = 'TEST' are internal QA rows — not real sales", fix: "Filter Rows → Remove where status = 'TEST'" },
+      { issue: "'revenue_dollars' stored as text like '$2,100' in some rows", fix: "Replace '$' and ',' → '', then Change Type → Decimal Number", column: "revenue_dollars" },
+      { issue: "~8% of 'returns' rows are blank/null", fix: "Replace null → 0", column: "returns" },
+      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates", column: "product_name" },
+      { issue: "Rows with status = 'TEST' are internal QA rows — not real sales", fix: "Filter Rows → Remove where status = 'TEST'", column: "status" },
     ],
     sampleRow: {
       week_start: "2023-09-22",
@@ -159,10 +159,10 @@ export const FLAVOR_DATASETS: Record<string, FlavorDataset> = {
     source: "Kaarani sample dataset",
     columns: ["week_start", "product_name", "department_name", "units_sold", "margin_dollars", "status", "notes"],
     issues: [
-      { issue: "'units_sold' stored as text like '120 units' in some rows", fix: "Replace ' units' → '', then Change Type → Whole Number" },
-      { issue: "~8% of 'margin_dollars' rows are blank/null", fix: "Replace null → 0" },
-      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates" },
-      { issue: "Rows with status = 'TEST' are internal QA rows", fix: "Filter Rows → Remove where status = 'TEST'" },
+      { issue: "'units_sold' stored as text like '120 units' in some rows", fix: "Replace ' units' → '', then Change Type → Whole Number", column: "units_sold" },
+      { issue: "~8% of 'margin_dollars' rows are blank/null", fix: "Replace null → 0", column: "margin_dollars" },
+      { issue: "4 exact duplicate rows in the export", fix: "Remove Rows → Remove Duplicates", column: "product_name" },
+      { issue: "Rows with status = 'TEST' are internal QA rows", fix: "Filter Rows → Remove where status = 'TEST'", column: "status" },
     ],
     sampleRow: {
       week_start: "2024-01-05",

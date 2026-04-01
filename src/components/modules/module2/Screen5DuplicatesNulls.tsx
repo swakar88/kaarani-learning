@@ -6,7 +6,7 @@ import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { getFlavorDataset } from "@/data/module2";
-import { ScreenHeader, PowerBICallout } from "@/components/ui/ScreenSection";
+import { ScreenHeader, PowerBICallout, ScreenshotNote } from "@/components/ui/ScreenSection";
 import { useBlockReveal } from "@/hooks/useBlockReveal";
 import { useSpeechContext } from "@/context/SpeechContext";
 
@@ -70,7 +70,8 @@ export default function Screen5DuplicatesNulls({ onNext, onPrev, screenIndex, to
                 <p className="text-xs mt-1.5" style={{ color: "#2563EB" }}> Fix: {dupeIssue.fix}</p>
               </div>
               <img src="/screenshots/m2-remove-duplicates.png" alt="Remove Duplicates in Power Query"
-                className="w-full rounded-xl border mb-3" style={{ borderColor: "#E5E7EB" }} />
+                className="w-full rounded-xl border" style={{ borderColor: "#E5E7EB" }} />
+              <ScreenshotNote flavorLabel={flavor.label} hint={`select the "${dupeIssue.column ?? dataset.columns[0]}" column to find duplicates`} />
               <div className="rounded-2xl p-4" style={{ backgroundColor: "#FFFFFF", border: "1px solid #E5E7EB" }}>
                 <p className="text-sm font-bold mb-2" style={{ color: "#111827" }}>How to remove in Power Query:</p>
                 <ol className="flex flex-col gap-1.5">
@@ -92,6 +93,7 @@ export default function Screen5DuplicatesNulls({ onNext, onPrev, screenIndex, to
                   <p className="text-xs font-bold mb-1 text-center" style={{ color: "#6B7280" }}>Column quality view</p>
                   <img src="/screenshots/m2-null-count.png" alt="Column quality showing null count"
                     className="w-full rounded-xl border" style={{ borderColor: "#E5E7EB" }} />
+                  <ScreenshotNote flavorLabel={flavor.label} hint={`check the "${nullIssue.column ?? dataset.columns[2]}" column for null %`} />
                 </div>
                 <div>
                   <p className="text-xs font-bold mb-1 text-center" style={{ color: "#6B7280" }}>Replace Values dialog</p>

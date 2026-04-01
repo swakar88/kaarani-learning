@@ -77,7 +77,7 @@ export default function Screen5MeasuresVsColumns({ onNext, onPrev, screenIndex, 
                     </div>
                   ))}
                 </div>
-                <CodeBlock code={`// Measure — responds to all report filters\nTotal ${flavor.metric1Label} = SUM(fact_[${flavor.metric1Label}])\n\n// Same measure shows different values for:\n// - All time: 847\n// - IPL 2023 only: 300\n// - Mumbai Indians only: 412`} label={`$Measure Example`} color={M_COLOR} />
+                <CodeBlock code={`// Measure — responds to all report filters\nTotal ${flavor.metric1Label} = SUM(fact_[${flavor.metric1Label}])\n\n// Same measure shows different values for:\n// - All time: 847\n// - 2023 season only: 300\n// - New York Yankees only: 412`} label={`$Measure Example`} color={M_COLOR} />
               </div>
             </div>
           )}

@@ -6,7 +6,7 @@ import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { getFlavorDataset } from "@/data/module2";
-import { ScreenHeader, PowerBICallout } from "@/components/ui/ScreenSection";
+import { ScreenHeader, PowerBICallout, ScreenshotNote } from "@/components/ui/ScreenSection";
 import { useBlockReveal } from "@/hooks/useBlockReveal";
 import { useSpeechContext } from "@/context/SpeechContext";
 
@@ -83,7 +83,8 @@ export default function Screen7FilterRows({ onNext, onPrev, screenIndex, totalSc
           </div>
 
           <img src="/screenshots/m2-filter-rows.png" alt="Filter rows dropdown in Power Query"
-            className="w-full rounded-xl border mb-4" style={{ borderColor: "#E5E7EB" }} />
+            className="w-full rounded-xl border" style={{ borderColor: "#E5E7EB" }} />
+          <ScreenshotNote flavorLabel={flavor.label} hint={`filter the "${filterIssue.column ?? dataset.columns[0]}" column using the dropdown`} />
           <div className="grid grid-cols-2 gap-3">
             {[
               { label: "Remove rows where column = value", example: "Volume = 0", icon: "" },

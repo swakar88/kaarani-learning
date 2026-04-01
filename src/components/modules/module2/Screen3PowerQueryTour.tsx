@@ -4,7 +4,9 @@ import { useState } from "react";
 import { ModuleLayout } from "@/components/layout/ModuleLayout";
 import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
-import { ScreenHeader } from "@/components/ui/ScreenSection";
+import { getFlavorById } from "@/data/flavors";
+import { getFlavorDataset } from "@/data/module2";
+import { ScreenHeader, ScreenshotNote } from "@/components/ui/ScreenSection";
 import { useBlockReveal } from "@/hooks/useBlockReveal";
 import { useSpeechContext } from "@/context/SpeechContext";
 
@@ -24,8 +26,10 @@ const PQ_ZONES = [
 ];
 
 export default function Screen3PowerQueryTour({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {
-  const { unlockVoice } = useKaarani();
+  const { selectedFlavor, unlockVoice } = useKaarani();
   const { speak } = useSpeechContext();
+  const flavor = getFlavorById(selectedFlavor);
+  const dataset = getFlavorDataset(selectedFlavor);
   const [active, setActive] = useState<string | null>(null);
   const current = PQ_ZONES.find(z => z.id === active);
 
@@ -98,7 +102,7 @@ export default function Screen3PowerQueryTour({ onNext, onPrev, screenIndex, tot
                       <div key={h} className="flex-1 text-[8px] px-1.5 py-1 font-semibold border-r" style={{ color: "#6B7280", borderColor: "#E5E7EB" }}>{h}</div>
                     ))}
                   </div>
-                  {[[1, "Jan 3", "₹499", "Active"], [2, "Jan 4", "null", "Active"], [3, "Jan 4", "₹899", "Active"]].map((row, i) => (
+                  {[[1, "Jan 3", "$499", "Active"], [2, "Jan 4", "null", "Active"], [3, "Jan 4", "$899", "Active"]].map((row, i) => (
                     <div key={i} className="flex border-t" style={{ borderColor: "#F3F4F6" }}>
                       {row.map((cell, j) => (
                         <div key={j} className="flex-1 text-[8px] px-1.5 py-1 border-r font-mono" style={{ color: String(cell) === "null" ? "#EF4444" : "#374151", borderColor: "#F3F4F6" }}>{cell}</div>
@@ -125,6 +129,7 @@ export default function Screen3PowerQueryTour({ onNext, onPrev, screenIndex, tot
           </div>
           <img src="/screenshots/m2-raw-data.png" alt="Real Power Query Editor with messy data loaded"
             className="w-full rounded-xl mt-3 border" style={{ borderColor: "#E5E7EB" }} />
+          <ScreenshotNote flavorLabel={flavor.label} hint={`your columns will be: ${dataset.columns.slice(0, 4).join(", ")}…`} />
           <p className="text-xs text-center mt-1" style={{ color: "#9CA3AF" }}>The real Power Query Editor — tap each zone below to learn what it does</p>
         </div>
 

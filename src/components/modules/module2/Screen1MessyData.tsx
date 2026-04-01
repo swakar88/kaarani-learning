@@ -13,10 +13,10 @@ const M_COLOR = "#2563EB";
 
 const MESSY_EXAMPLES = [
   { label: "Dates as text",                 bad: '"15/03/2019"',                      good: "Date field: 15 Mar 2019" },
-  { label: "Numbers with currency symbols", bad: '"₹ 1,299"',                         good: "Decimal: 1299" },
+  { label: "Numbers with currency symbols", bad: '"$1,299"',                          good: "Decimal: 1299" },
   { label: "Missing values (nulls)",        bad: "—",                                 good: "Replace with 0 or 'Unknown'" },
   { label: "Duplicate rows",                bad: "Same record twice",                 good: "Remove duplicates" },
-  { label: "Inconsistent spelling",         bad: '"MI", "Mumbai Indians", "Mumbai"',  good: "One canonical name" },
+  { label: "Inconsistent spelling",         bad: '"NYY", "New York Yankees", "New York"', good: "One canonical name" },
 ];
 
 export default function Screen1MessyData({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {

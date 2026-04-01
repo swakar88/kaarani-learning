@@ -13,11 +13,11 @@ import { useSpeechContext } from "@/context/SpeechContext";
 const M_COLOR = "#2563EB";
 
 const TRANSFORMS = [
-  { id: "rename", icon: "", label: "Rename", desc: "Give columns meaningful names", example: "\"runs_batsman\" → \"Runs Scored\"", m: '= Table.RenameColumns(Source, {{"runs_batsman", "Runs Scored"}})' },
-  { id: "split", icon: "", label: "Split Column", desc: "Separate one column into two", example: "\"BLR-DEL\" → \"Origin\" + \"Dest\"", m: '= Table.SplitColumn(Source, "Route", Splitter.SplitTextByDelimiter("-"))' },
+  { id: "rename", icon: "", label: "Rename", desc: "Give columns meaningful names", example: "\"pass_yds\" → \"Pass Yards\"", m: '= Table.RenameColumns(Source, {{"pass_yds", "Pass Yards"}})' },
+  { id: "split", icon: "", label: "Split Column", desc: "Separate one column into two", example: "\"LAX-ORD\" → \"Origin\" + \"Dest\"", m: '= Table.SplitColumn(Source, "Route", Splitter.SplitTextByDelimiter("-"))' },
   { id: "custom", icon: "", label: "Custom Column", desc: "Create calculated columns using M", example: "Profit = Revenue - Cost", m: '= Table.AddColumn(Source, "Profit", each [Revenue] - [Cost])' },
   { id: "extract", icon: "", label: "Extract", desc: "Pull part of a text or number", example: "Extract year from date string", m: '= Table.AddColumn(Source, "Year", each Date.Year([OrderDate]))' },
-  { id: "replace", icon: "", label: "Replace Values", desc: "Find and replace specific values", example: "\"MI\" → \"Mumbai Indians\"", m: '= Table.ReplaceValue(Source, "MI", "Mumbai Indians", Replacer.ReplaceText, {"team"})' },
+  { id: "replace", icon: "", label: "Replace Values", desc: "Find and replace specific values", example: "\"NYY\" → \"New York Yankees\"", m: '= Table.ReplaceValue(Source, "NYY", "New York Yankees", Replacer.ReplaceText, {"team"})' },
 ];
 
 export default function Screen6TransformColumns({ onNext, onPrev, screenIndex, totalScreens }: ScreenProps) {

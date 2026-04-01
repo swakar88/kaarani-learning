@@ -6,7 +6,7 @@ import { ScreenProps } from "@/types";
 import { useKaarani } from "@/context/KaaraniContext";
 import { getFlavorById } from "@/data/flavors";
 import { getFlavorDataset } from "@/data/module2";
-import { ScreenHeader, CodeBlock } from "@/components/ui/ScreenSection";
+import { ScreenHeader, CodeBlock, ScreenshotNote } from "@/components/ui/ScreenSection";
 import { useBlockReveal } from "@/hooks/useBlockReveal";
 import { useSpeechContext } from "@/context/SpeechContext";
 
@@ -97,6 +97,7 @@ export default function Screen4ChangeTypes({ onNext, onPrev, screenIndex, totalS
               <p className="text-xs font-bold mb-1 text-center" style={{ color: "#6B7280" }}>Click the type icon</p>
               <img src="/screenshots/m2-change-type.png" alt="Changing column type in Power Query"
                 className="w-full rounded-xl border" style={{ borderColor: "#E5E7EB" }} />
+              <ScreenshotNote flavorLabel={flavor.label} hint={`look for the "${dateIssue.column ?? dataset.columns[1]}" column with the wrong type icon`} />
             </div>
             <div>
               <p className="text-xs font-bold mb-1 text-center" style={{ color: "#6B7280" }}>Confirm replacement</p>
